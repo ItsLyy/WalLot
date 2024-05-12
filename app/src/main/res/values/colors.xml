@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="dark_grey">#202020</color>
+    <color name="black_transparent">#40000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_white">#EDEDED</color>
+    <color name="dark_white">#e0e0e0</color>
+    <color name="blue">#578EC9</color>
+    <color name="cyan">#57b6c9</color>
+    <color name="yellow">#c9c00a</color>
+    <color name="cyan_transparent">#2057b6c9</color>
+    <color name="yellow_transparent">#20c9c00a</color>
 </resources>
