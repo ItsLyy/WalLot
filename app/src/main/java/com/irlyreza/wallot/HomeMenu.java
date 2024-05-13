@@ -3,6 +3,8 @@ package com.irlyreza.wallot;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,14 +30,15 @@ public class HomeMenu extends Fragment {
     private String mParam1;
     private String mParam2;
     ListView newestTransaction;
-    String[] categoryTransaction = {"Cash", "Wallet", "Cash", "Cash"};
-    String[] dateTransaction = {"01-12-2024", "02-12-2024", "04-12-2024", "20-12-2024"};
-    String[] moneyTransaction = { "20.000", "10.000", "120.000", "400.000" };
-    int[] iconTransaction = { R.drawable.category_cash_icon, R.drawable.category_cash_icon, R.drawable.category_cash_icon, R.drawable.category_cash_icon };
+    RecyclerView horizontalWallet;
+    LinearLayoutManager linearLayoutManager;
 
     Transaction_Data transactionData;
+    Wallet_Data walletData;
     TransactionListAdapter transactionListAdapter;
-    ArrayList<Transaction_Data> data;
+    WalletHorizontalListAdapter walletHorizontalListAdapter;
+    ArrayList<Transaction_Data> transactionArray;
+    ArrayList<Wallet_Data> walletArray;
 
 
     public HomeMenu() {
@@ -74,19 +77,37 @@ public class HomeMenu extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_menu, container, false);
         newestTransaction = view.findViewById(R.id.newest_transaction);
+        horizontalWallet = view.findViewById(R.id.horizontal_wallet_list);
         addData();
-        transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), data);
+        transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
+        walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity().getApplicationContext(), walletArray);
+        linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         newestTransaction.setAdapter(transactionListAdapter);
+        horizontalWallet.setLayoutManager(linearLayoutManager);
+        horizontalWallet.setAdapter(walletHorizontalListAdapter);
 
         // Inflate the layout for this fragment
         return view;
     }
 
     void addData() {
-        data = new ArrayList<>();
-        data.add(new Transaction_Data("Cash", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        data.add(new Transaction_Data("Wallet", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        data.add(new Transaction_Data("coawij", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        data.add(new Transaction_Data("ejkf", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        transactionArray = new ArrayList<>();
+        transactionArray.add(new Transaction_Data("Cash", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        transactionArray.add(new Transaction_Data("Wallet", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        transactionArray.add(new Transaction_Data("coawij", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        transactionArray.add(new Transaction_Data("ejkf", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+
+        walletArray = new ArrayList<>();
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
     }
 }

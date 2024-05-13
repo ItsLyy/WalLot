@@ -42,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout plusTransactionBtn;
 
     RelativeLayout bodyContainer;
+    ListView listTest;
 
     private int selectedTab = 1;
 
+    @SuppressLint("WrongViewCast") ArrayList<Transaction_Data> data;
 
 
     @SuppressLint("MissingInflatedId")
@@ -276,5 +278,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Bottom Navigator == End
+
+
     }
 }

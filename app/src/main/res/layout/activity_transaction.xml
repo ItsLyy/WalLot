@@ -45,13 +45,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@drawable/bn_plus_icon" />
+                android:src="@drawable/debt_icon" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:text="halo"
+                android:text="Debt"
                 android:textAlignment="center" />
 
         </LinearLayout>
@@ -71,14 +71,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@drawable/bn_plus_icon"
+                android:src="@drawable/transaction_icon"
                 tools:ignore="NestedWeights" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:text="halo"
+                android:text="Transaction"
                 android:textAlignment="center" />
 
         </LinearLayout>
