@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,15 +13,15 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class TransactionListAdapter extends ArrayAdapter<Transaction_Data> {
-    TransactionListAdapter(Context context, ArrayList<Transaction_Data> model) {
+public class TransactionListAdapter extends ArrayAdapter<WalLot_Data.Transaction_Data> {
+    TransactionListAdapter(Context context, ArrayList<WalLot_Data.Transaction_Data> model) {
         super(context, R.layout.list_transaction_item, model);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
-        Transaction_Data transactionData = getItem(position);
+        WalLot_Data.Transaction_Data transactionData = getItem(position);
 
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_transaction_item, parent, false);

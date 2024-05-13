@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -31,14 +30,15 @@ public class HomeMenu extends Fragment {
     private String mParam2;
     ListView newestTransaction;
     RecyclerView horizontalWallet;
-    LinearLayoutManager linearLayoutManager;
+    RecyclerView horizontalDebt;
+    LinearLayoutManager linearLayoutManager, linearLayoutManager1;
 
-    Transaction_Data transactionData;
-    Wallet_Data walletData;
     TransactionListAdapter transactionListAdapter;
     WalletHorizontalListAdapter walletHorizontalListAdapter;
-    ArrayList<Transaction_Data> transactionArray;
-    ArrayList<Wallet_Data> walletArray;
+    DebtHorizontalListAdapter debtHorizontalListAdapter;
+    ArrayList<WalLot_Data.Transaction_Data> transactionArray;
+    ArrayList<WalLot_Data.Wallet_Data> walletArray;
+    ArrayList<WalLot_Data.Debt_Data> debtArray;
 
 
     public HomeMenu() {
@@ -78,13 +78,18 @@ public class HomeMenu extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_menu, container, false);
         newestTransaction = view.findViewById(R.id.newest_transaction);
         horizontalWallet = view.findViewById(R.id.horizontal_wallet_list);
+        horizontalDebt = view.findViewById(R.id.horizontal_debt_list);
         addData();
         transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
         walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity().getApplicationContext(), walletArray);
+        debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity().getApplicationContext(), debtArray);
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         newestTransaction.setAdapter(transactionListAdapter);
         horizontalWallet.setLayoutManager(linearLayoutManager);
         horizontalWallet.setAdapter(walletHorizontalListAdapter);
+        horizontalDebt.setLayoutManager(linearLayoutManager1);
+        horizontalDebt.setAdapter(debtHorizontalListAdapter);
 
         // Inflate the layout for this fragment
         return view;
@@ -92,22 +97,22 @@ public class HomeMenu extends Fragment {
 
     void addData() {
         transactionArray = new ArrayList<>();
-        transactionArray.add(new Transaction_Data("Cash", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new Transaction_Data("Wallet", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new Transaction_Data("coawij", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new Transaction_Data("ejkf", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        transactionArray.add(new WalLot_Data.Transaction_Data("Cash", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        transactionArray.add(new WalLot_Data.Transaction_Data("Wallet", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        transactionArray.add(new WalLot_Data.Transaction_Data("coawij", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        transactionArray.add(new WalLot_Data.Transaction_Data("ejkf", "20.000", "12-12-2012", R.drawable.category_cash_icon));
 
         walletArray = new ArrayList<>();
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+
+        debtArray = new ArrayList<>();
+        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
+        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
+        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
+        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
     }
 }

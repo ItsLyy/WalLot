@@ -1,9 +1,6 @@
 package com.irlyreza.wallot;
 
-import static android.view.LayoutInflater.*;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,21 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -46,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int selectedTab = 1;
 
-    @SuppressLint("WrongViewCast") ArrayList<Transaction_Data> data;
+    @SuppressLint("WrongViewCast") ArrayList<WalLot_Data.Transaction_Data> data;
 
 
     @SuppressLint("MissingInflatedId")

@@ -3,10 +3,15 @@ package com.irlyreza.wallot;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +28,11 @@ public class WalletMenu extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    WalletVerticallyListAdapter walletVerticallyListAdapter;
+    RecyclerView walletList;
+    ArrayList<WalLot_Data.Wallet_Data> walletData;
+
 
     public WalletMenu() {
         // Required empty public constructor
@@ -58,7 +68,28 @@ public class WalletMenu extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_wallet_menu, container, false);
+        walletList = view.findViewById(R.id.vertical_wallet_list);
+        addData();
+        walletVerticallyListAdapter = new WalletVerticallyListAdapter(getActivity().getApplicationContext(), walletData);
+        walletList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        walletList.setAdapter(walletVerticallyListAdapter);
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_wallet_menu, container, false);
+        return view;
+    }
+
+    void addData() {
+        walletData = new ArrayList<>();
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
     }
 }

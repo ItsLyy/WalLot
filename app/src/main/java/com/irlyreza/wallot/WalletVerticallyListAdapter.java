@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class WalletHorizontalListAdapter extends RecyclerView.Adapter<WalletHorizontalListAdapter.MyHolder> {
+public class WalletVerticallyListAdapter extends RecyclerView.Adapter<WalletVerticallyListAdapter.MyHolder> {
     ArrayList<WalLot_Data.Wallet_Data> model;
     Context context;
 
-    public WalletHorizontalListAdapter(Context context, ArrayList<WalLot_Data.Wallet_Data> model) {
+    public WalletVerticallyListAdapter(Context context, ArrayList<WalLot_Data.Wallet_Data> model) {
         this.context = context;
         this.model = model;
     }
@@ -24,13 +24,14 @@ public class WalletHorizontalListAdapter extends RecyclerView.Adapter<WalletHori
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.recycle_view_horizontal_wallet_item, parent, false);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.list_wallet_item, parent, false);
         return new MyHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         holder.name.setText(this.model.get(position).name);
+        holder.money.setText(this.model.get(position).money);
         holder.icon.setImageResource(this.model.get(position).icon);
     }
 
@@ -42,12 +43,13 @@ public class WalletHorizontalListAdapter extends RecyclerView.Adapter<WalletHori
     class MyHolder extends RecyclerView.ViewHolder {
         TextView name;
         ImageView icon;
+        TextView money;
 
         public MyHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.wallet_name);
-            icon = itemView.findViewById(R.id.wallet_icon);
-
+            name = itemView.findViewById(R.id.name_wallet_item);
+            money = itemView.findViewById(R.id.money_wallet_item);
+            icon = itemView.findViewById(R.id.icon_wallet_item);
         }
     }
 }
