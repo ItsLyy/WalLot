@@ -71,7 +71,7 @@ public class WalletMenu extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wallet_menu, container, false);
         walletList = view.findViewById(R.id.vertical_wallet_list);
         addData();
-        walletVerticallyListAdapter = new WalletVerticallyListAdapter(getActivity().getApplicationContext(), walletData);
+        walletVerticallyListAdapter = new WalletVerticallyListAdapter(getActivity(), getActivity().getApplicationContext(), walletData);
         walletList.setLayoutManager(new LinearLayoutManager(getActivity()));
         walletList.setAdapter(walletVerticallyListAdapter);
 

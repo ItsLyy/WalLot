@@ -33,11 +33,13 @@
                 android:padding="10dp">
 
                 <ImageView
+                    android:id="@+id/wallet_icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/bn_group_icon"
                     android:background="@drawable/wallet_profile_background"
-                    android:padding="5dp"/>
+                    android:padding="15dp"
+                    android:backgroundTint="@color/yellow"/>
 
             </LinearLayout>
 
@@ -54,12 +56,14 @@
                 android:foregroundGravity="center">
 
                 <TextView
+                    android:id="@+id/wallet_name"
                     android:layout_width="match_parent"
                     android:textAlignment="center"
                     android:layout_height="wrap_content"
                     android:text="Wallet Name"/>
 
                 <TextView
+                    android:id="@+id/wallet_nominal"
                     android:layout_width="match_parent"
                     android:textAlignment="center"
                     android:layout_height="wrap_content"
