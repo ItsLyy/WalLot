@@ -4,12 +4,16 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,13 +22,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.text.NumberFormat;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class TransactionMenu extends AppCompatActivity {
     Button datePickerTransaction, saveTransaction, incomeBtn, outcomeBtn;
+    EditText transactionNominal, transactionDescription;
+    TextView transactionDescriptionLength;
     Spinner spinnerCategory;
     int years, months, days;
     int selectedMode = 1;
@@ -46,10 +54,59 @@ public class TransactionMenu extends AppCompatActivity {
         spinnerCategory = findViewById(R.id.spinner_category);
         incomeBtn = findViewById(R.id.income_btn);
         outcomeBtn = findViewById(R.id.outcome_btn);
+        transactionNominal = findViewById(R.id.transaction_nominal);
+        transactionDescription = findViewById(R.id.transaction_description);
+        transactionDescriptionLength = findViewById(R.id.transaction_description_length);
 
         incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
         outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
         outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+
+        transactionNominal.addTextChangedListener(new TextWatcher() {
+            private  String setEditText = transactionNominal.getText().toString().trim();
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().equals(setEditText)) {
+                    transactionNominal.removeTextChangedListener(this);
+                    String replace = charSequence.toString().replaceAll("[Rp. ]", "");
+                    if (!replace.isEmpty()) {
+                        setEditText = formatRupiah(Double.parseDouble(replace));
+                    } else {
+                        setEditText = "";
+                    }
+                    transactionNominal.setText(setEditText);
+                    transactionNominal.setSelection(setEditText.length());
+                    transactionNominal.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        transactionDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                transactionDescriptionLength.setText(transactionDescription.length() + "/50");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         incomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,14 +140,12 @@ public class TransactionMenu extends AppCompatActivity {
             }
         });
 
-        ArrayList<String> categoryList = new ArrayList<>();
-        categoryList.add("Wallet1");
-        categoryList.add("Wallet2");
-        categoryList.add("Wallet3");
-        categoryList.add("Wallet4");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categoryList);
-        adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spinnerCategory.setAdapter(adapter);
+        ArrayList<WalLot_Data.Wallet_Data> categoryList = new ArrayList<>();
+        categoryList.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        categoryList.add(new WalLot_Data.Wallet_Data("DKA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        categoryList.add(new WalLot_Data.Wallet_Data("CBA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        WalletSpinnerAdapter walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
+        spinnerCategory.setAdapter(walletSpinnerAdapter);
 
 
         datePickerTransaction.setOnClickListener(new View.OnClickListener() {
@@ -123,5 +178,15 @@ public class TransactionMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private String formatRupiah(Double number) {
+        Locale localeId = new Locale("IND", "ID");
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(localeId);
+        String formatrupiah = numberFormat.format(number);
+        String[] split = formatrupiah.split(",");
+        int length = split[0].length();
+        return  split[0].substring(2,length);
+
     }
 }

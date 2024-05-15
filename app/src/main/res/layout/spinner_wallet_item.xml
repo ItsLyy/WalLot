@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:orientation="horizontal"
+    android:background="@color/dark_white"
+    android:gravity="center_vertical"
+    android:padding="10dp">
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/spinner_wallet_icon"
+        android:padding="5dp"
+        android:background="@drawable/category_bg_icon"
+        android:src="@drawable/category_cash_icon" />
+
+    <TextView
+        android:id="@+id/spinner_wallet_name"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="Wallet"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="10dp"
+        android:textSize="20sp"/>
+
+</LinearLayout>
