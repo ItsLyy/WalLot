@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
                     groupLabel.setTextColor(Color.BLACK);
                     profileLabel.setTextColor(Color.BLACK);
 
-
                     selectedTab = 2;
                 }
             }

@@ -1,5 +1,6 @@
 package com.irlyreza.wallot;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -90,6 +92,17 @@ public class HomeMenu extends Fragment {
         horizontalWallet.setAdapter(walletHorizontalListAdapter);
         horizontalDebt.setLayoutManager(linearLayoutManager1);
         horizontalDebt.setAdapter(debtHorizontalListAdapter);
+
+        newestTransaction.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), EditTransactionMenu.class);
+                intent.putExtra("nominal", transactionArray.get(i).money);
+                intent.putExtra("description", transactionArray.get(i).category);
+                intent.putExtra("date", transactionArray.get(i).date);
+                startActivity(intent);
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;
