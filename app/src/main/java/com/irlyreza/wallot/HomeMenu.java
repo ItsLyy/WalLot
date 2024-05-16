@@ -83,7 +83,7 @@ public class HomeMenu extends Fragment {
         horizontalDebt = view.findViewById(R.id.horizontal_debt_list);
         addData();
         transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
-        walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity().getApplicationContext(), walletArray);
+        walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity(), getActivity().getApplicationContext(), walletArray);
         debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity().getApplicationContext(), debtArray);
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);

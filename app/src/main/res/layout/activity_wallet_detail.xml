@@ -15,7 +15,17 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_gradient_blue">
+            android:background="@drawable/bg_gradient_blue"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/black"
+                android:orientation="horizontal">
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="120dp"
@@ -23,23 +33,22 @@
                 android:layout_above="@+id/linearLayout2"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="145dp"
-                android:layout_marginEnd="145dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginEnd="150dp"
                 android:layout_marginBottom="-370dp"
-                android:elevation="4dp"
+                android:elevation="10dp"
                 android:background="@drawable/wallet_profile_stroke"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="10dp">
 
-                <ImageView
-                    android:id="@+id/wallet_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/bn_group_icon"
-                    android:background="@drawable/wallet_profile_background"
-                    android:padding="15dp"
-                    android:backgroundTint="@color/yellow"/>
+                    <ImageView
+                        android:id="@+id/wallet_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bn_group_icon"
+                        android:background="@drawable/bg_icon_gradient_blue"
+                        android:padding="15dp"/>
 
             </LinearLayout>
 
@@ -53,6 +62,7 @@
                 android:paddingHorizontal="15dp"
                 android:paddingTop="60dp"
                 android:paddingBottom="20dp"
+                android:elevation="5dp"
                 android:foregroundGravity="center">
 
                 <TextView
@@ -86,14 +96,17 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_weight="1"
-                        android:background="@drawable/wallet_tab_background_left_btn"
+                        android:background="@drawable/wallet_tab_background_left1_btn"
                         android:id="@+id/member_btn">
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:tint="@color/white"
                             android:src="@drawable/bn_group_icon"
-                            android:padding="3dp"/>
+                            android:id="@+id/member_icon"
+                            android:padding="3dp"
+                            tools:ignore="UseAppTint" />
 
                     </LinearLayout>
 
@@ -102,14 +115,18 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:layout_weight="1"
-                        android:background="@color/cyan"
-                        android:id="@+id/transaction_btn">
+                        android:background="@color/white"
+                        android:id="@+id/transaction_btn"
+                        android:layout_marginHorizontal="2dp">
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/bn_group_icon"
-                            android:padding="3dp" />
+                            android:src="@drawable/transaction_icon"
+                            android:tint="@color/cyan"
+                            android:id="@+id/transaction_icon"
+                            android:padding="3dp"
+                            tools:ignore="UseAppTint" />
 
                     </LinearLayout>
 
@@ -124,8 +141,11 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/bn_group_icon"
-                            android:padding="3dp"/>
+                            android:src="@drawable/debt_icon"
+                            android:tint="@color/cyan"
+                            android:id="@+id/debt_icon"
+                            android:padding="3dp"
+                            tools:ignore="UseAppTint" />
 
                     </LinearLayout>
 

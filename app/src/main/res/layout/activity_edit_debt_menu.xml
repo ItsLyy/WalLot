@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditTransactionMenu">
+    tools:context=".EditDebtMenu">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,18 +102,83 @@
                     android:layout_height="wrap_content"
                     android:minHeight="70dp"
                     android:textSize="18sp"
-                    android:layout_marginVertical="5dp"
                     android:paddingHorizontal="10dp"
+                    android:layout_marginBottom="5dp"
                     android:drawableStart="@drawable/transaction_date_icon"
                     android:drawablePadding="7dp"
                     android:background="@drawable/transaction_input_field"
                     android:text="00/00/0000"
                     android:textAlignment="textStart"
                     android:textStyle="normal"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/light_grey"
                     android:stateListAnimator="@null"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/transaction_input_field"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/debt_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:background="@drawable/transaction_input_field"
+                        android:drawableStart="@drawable/debt_user_icon"
+                        android:drawablePadding="7dp"
+                        android:hint="Username"
+                        android:maxLength="50"
+                        android:minHeight="70dp"
+                        android:layout_weight="1"
+                        android:paddingHorizontal="10dp"
+                        android:textSize="18sp"/>
+                    />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="9"
+                        android:text="0/50"
+                        android:id="@+id/debt_username_length"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/transaction_input_field"
+                    android:orientation="horizontal"
+                    android:layout_marginVertical="5dp">
+
+                    <EditText
+                        android:id="@+id/debt_number_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:background="@drawable/transaction_input_field"
+                        android:drawableStart="@drawable/debt_phone_number_icon"
+                        android:drawablePadding="7dp"
+                        android:hint="Phone Number"
+                        android:inputType="number"
+                        android:maxLength="50"
+                        android:minHeight="70dp"
+                        android:layout_weight="1"
+                        android:paddingHorizontal="10dp"
+                        android:textSize="18sp"/>
+                    />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="9"
+                        android:text="0/50"
+                        android:id="@+id/debt_number_phone_length"/>
+
+                </LinearLayout>
+
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,12 +215,27 @@
                         android:text="Update"
                         android:textColor="@color/light_white"
                         android:textSize="14sp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="2"/>
+
+                    <ImageView
+                        android:id="@+id/done_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:layout_marginLeft="6dp"
+                        android:padding="10dp"
+                        android:text="Delete"
+                        android:tint="@color/light_white"
+                        android:src="@drawable/delete_trasaction_icon"
+                        android:background="@drawable/transaction_add_btn"
+                        tools:ignore="UseAppTint" />
 
                 </LinearLayout>
+
 
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

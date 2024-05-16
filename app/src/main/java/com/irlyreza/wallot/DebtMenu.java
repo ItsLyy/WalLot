@@ -1,5 +1,6 @@
 package com.irlyreza.wallot;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,10 +26,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class EditTransactionMenu extends AppCompatActivity {
-
-    Button datePickerTransaction, updateBtn;
-    ImageView deleteBtn;
+public class DebtMenu extends AppCompatActivity {
+    Button datePickerTransaction, saveTransaction, incomeBtn, outcomeBtn;
     EditText transactionNominal, transactionDescription;
     TextView transactionDescriptionLength;
     Spinner spinnerCategory;
@@ -37,38 +35,27 @@ public class EditTransactionMenu extends AppCompatActivity {
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
     String category;
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_edit_transaction_menu);
+        setContentView(R.layout.activity_debt_menu);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-
         datePickerTransaction = findViewById(R.id.datePickerTransaction);
+        saveTransaction = findViewById(R.id.save_transaction);
         spinnerCategory = findViewById(R.id.spinner_category);
-        updateBtn = findViewById(R.id.update_btn);
-        deleteBtn = findViewById(R.id.delete_btn);
+        incomeBtn = findViewById(R.id.income_btn);
+        outcomeBtn = findViewById(R.id.outcome_btn);
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
 
-        transactionNominal.setText(bundle.getString("nominal"));
-        transactionDescription.setText(bundle.getString("description"));
-        datePickerTransaction.setText(bundle.getString("date"));
-
-
-        updateBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
-        updateBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
-        deleteBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
-        deleteBtn.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+        incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+        outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+        outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
 
         transactionNominal.addTextChangedListener(new TextWatcher() {
             private  String setEditText = transactionNominal.getText().toString().trim();
@@ -116,17 +103,23 @@ public class EditTransactionMenu extends AppCompatActivity {
             }
         });
 
-        updateBtn.setOnClickListener(new View.OnClickListener() {
+        incomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                incomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+                incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+                outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+                outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
             }
         });
 
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
+        outcomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+                outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+                incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+                incomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
             }
         });
 
@@ -159,7 +152,7 @@ public class EditTransactionMenu extends AppCompatActivity {
                 days = calendar.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog;
-                dialog = new DatePickerDialog(EditTransactionMenu.this, new DatePickerDialog.OnDateSetListener() {
+                dialog = new DatePickerDialog(DebtMenu.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         years = year;
@@ -173,6 +166,13 @@ public class EditTransactionMenu extends AppCompatActivity {
             }
         });
 
+        saveTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private String formatRupiah(Double number) {

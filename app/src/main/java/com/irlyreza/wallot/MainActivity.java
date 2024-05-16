@@ -265,6 +265,14 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+
+                debtBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), DebtMenu.class);
+                        startActivity(intent);
+                    }
+                });
             }
         });
 

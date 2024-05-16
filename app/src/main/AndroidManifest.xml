@@ -13,6 +13,9 @@
         android:theme="@style/Theme.WalLot"
         tools:targetApi="31">
         <activity
+            android:name=".EditDebtMenu"
+            android:exported="false" />
+        <activity
             android:name=".EditTransactionMenu"
             android:exported="false" />
         <activity
@@ -22,7 +25,7 @@
             android:name=".WalletDetail"
             android:exported="false" />
         <activity
-            android:name=".GroupMenu"
+            android:name=".DebtMenu"
             android:exported="false" />
         <activity
             android:name=".HomeMenu"
