@@ -153,7 +153,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="480dp"
                     android:orientation="vertical"
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="120dp"

@@ -102,12 +102,12 @@ public class EditTransactionMenu extends AppCompatActivity {
         transactionDescription.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                transactionDescriptionLength.setText(transactionDescription.length() + "/20");
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                transactionDescriptionLength.setText(transactionDescription.length() + "/50");
+                transactionDescriptionLength.setText(transactionDescription.length() + "/20");
             }
 
             @Override

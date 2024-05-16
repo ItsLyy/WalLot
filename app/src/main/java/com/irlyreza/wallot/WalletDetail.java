@@ -45,6 +45,11 @@ public class WalletDetail extends AppCompatActivity {
         iconTransaction = findViewById(R.id.transaction_icon);
         iconDebt = findViewById(R.id.debt_icon);
 
+        getSupportFragmentManager().beginTransaction().
+                setReorderingAllowed(true).
+                replace(R.id.fragment_wallet_detail_container, WalletDetailMember.class, null).
+                commit();
+
         memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left1_btn));
         iconMember.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
 
@@ -53,20 +58,48 @@ public class WalletDetail extends AppCompatActivity {
             public void onClick(View v) {
                 memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left1_btn));
                 iconMember.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+
+                transactionBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                iconTransaction.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+
+                debtBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_right_btn));
+                iconDebt.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+
+                getSupportFragmentManager().beginTransaction().
+                        setReorderingAllowed(true).
+                        replace(R.id.fragment_wallet_detail_container, WalletDetailMember.class, null).
+                        commit();
             }
         });
 
         transactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left_btn));
+                iconMember.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+
                 transactionBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
                 iconTransaction.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+
+                debtBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_right_btn));
+                iconDebt.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+
+                getSupportFragmentManager().beginTransaction().
+                        setReorderingAllowed(true).
+                        replace(R.id.fragment_wallet_detail_container, WalletDetailTransaction.class, null).
+                        commit();
             }
         });
 
         debtBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left_btn));
+                iconMember.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+
+                transactionBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                iconTransaction.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+
                 debtBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_right1_btn));
                 iconDebt.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
             }
