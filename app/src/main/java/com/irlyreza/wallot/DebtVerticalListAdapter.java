@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizontalListAdapter.MyHolder> {
+public class DebtVerticalListAdapter extends RecyclerView.Adapter<DebtVerticalListAdapter.MyHolder> {
     ArrayList<WalLot_Data.Debt_Data> model;
     Context context, fragmentContext;
 
-    public DebtHorizontalListAdapter(Context fragmentContext, Context context, ArrayList<WalLot_Data.Debt_Data> model) {
+    public DebtVerticalListAdapter(Context fragmentContext, Context context, ArrayList<WalLot_Data.Debt_Data> model) {
         this.context = context;
         this.model = model;
         this.fragmentContext = fragmentContext;
@@ -27,7 +27,7 @@ public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizont
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.recycle_view_debt_wallet_item, parent, false);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.recycle_view_vertical_debt_wallet_item, parent, false);
         return new MyHolder(view);
     }
 

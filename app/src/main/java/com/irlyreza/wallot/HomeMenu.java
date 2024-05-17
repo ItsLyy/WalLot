@@ -84,7 +84,7 @@ public class HomeMenu extends Fragment {
         addData();
         transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
         walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity(), getActivity().getApplicationContext(), walletArray);
-        debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity().getApplicationContext(), debtArray);
+        debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity() ,getActivity().getApplicationContext(), debtArray);
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         newestTransaction.setAdapter(transactionListAdapter);

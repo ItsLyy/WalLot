@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1096558769711",
+    "firebase_url": "https://wallot-94ed0-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "wallot-94ed0",
+    "storage_bucket": "wallot-94ed0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096558769711:android:9e7527cff737e05883f8da",
+        "android_client_info": {
+          "package_name": "com.irlyreza.wallot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGeUN-q9Jirsiy0abaHqPcOtBInxEpN7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -94,6 +94,11 @@ public class WalletDetail extends AppCompatActivity {
         debtBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().
+                        setReorderingAllowed(true).
+                        replace(R.id.fragment_wallet_detail_container, WalletDetailDebt.class, null).
+                        commit();
+
                 memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left_btn));
                 iconMember.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
 

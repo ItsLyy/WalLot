@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".WalletDetailMember">
@@ -16,6 +17,7 @@
             android:id="@+id/wallet_member_list"/>
 
         <Button
+            android:id="@+id/wallet_add_member_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add Member"

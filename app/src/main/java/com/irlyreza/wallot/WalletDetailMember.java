@@ -1,12 +1,19 @@
 package com.irlyreza.wallot;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +31,7 @@ public class WalletDetailMember extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    Button addMemberBtn;
     public WalletDetailMember() {
         // Required empty public constructor
     }
@@ -59,6 +67,44 @@ public class WalletDetailMember extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_wallet_detail_member, container, false);
+        View view = inflater.inflate(R.layout.fragment_wallet_detail_member, container, false);
+        View viewWalletDetail = inflater.inflate(R.layout.activity_wallet_detail, container, false);
+
+
+
+        addMemberBtn = view.findViewById(R.id.wallet_add_member_btn);
+
+        addMemberBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View views) {
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupSelector = inflater.inflate(R.layout.activity_add_friend_overlay, null);
+
+                int width = ViewGroup.LayoutParams.MATCH_PARENT;
+                int height = ViewGroup.LayoutParams.MATCH_PARENT;
+                boolean focusable = true;
+                PopupWindow popupWindow = new PopupWindow(popupSelector, width, height, focusable);
+                view.findViewById(R.id.main).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        popupWindow.showAtLocation(viewWalletDetail.findViewById(R.id.main), Gravity.BOTTOM, 0, 0);
+                    }
+                });
+                popupSelector.findViewById(R.id.main).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        popupWindow.dismiss();
+                    }
+                });
+                popupSelector.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        popupWindow.dismiss();
+                    }
+                });
+            }
+        });
+
+        return view;
     }
 }
