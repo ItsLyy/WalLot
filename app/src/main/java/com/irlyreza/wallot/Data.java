@@ -28,7 +28,7 @@ public class Data extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = "CREATE TABLE IF NOT EXISTS " + nama_table + "(id INT(50) PRIMARY KEY AUTOINCREMENT ,username VARCHAR(8),password VARCHAR(12) )";
+        String query = "CREATE TABLE IF NOT EXISTS " + nama_table + "(id INT(50) PRIMARY KEY AUTOINCREMENT ,username VARCHAR(8),password VARCHAR(12),email VARCHAR(50), phone VARCHAR(20) )";
         db.execSQL(query);
     }
 
@@ -62,8 +62,8 @@ public class Data extends SQLiteOpenHelper {
 
     }
 
-    public void insert_data(String username, String password){
-        database.execSQL("INSERT INTO "+nama_table+"(username,password) VALUES ('"+username+"','"+password+"')");
+    public void insert_data(String username, String password, String email, String phone){
+        database.execSQL("INSERT INTO "+nama_table+"(username,password,email,phone) VALUES ('"+username+"','"+password+", "+email+", "+phone+"')");
         Toast.makeText(context, "Your account has been created", Toast.LENGTH_SHORT).show();
     }
 
