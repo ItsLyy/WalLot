@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.fragment.wallet_detail;
 
 import android.os.Bundle;
 
@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.adapter.DebtVerticalListAdapter;
+import com.irlyreza.wallot.data.DataDebtModel;
 
 import java.util.ArrayList;
 
@@ -28,7 +31,7 @@ public class WalletDetailDebt extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ArrayList<WalLot_Data.Debt_Data> debtArray;
+    ArrayList<DataDebtModel> debtArray;
     DebtVerticalListAdapter debtVerticalListAdapter;
     RecyclerView debtVerticalList;
 
@@ -78,9 +81,6 @@ public class WalletDetailDebt extends Fragment {
     }
     void addData() {
         debtArray = new ArrayList<>();
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
+
     }
 }

@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,13 +12,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.irlyreza.wallot.data.DataDebtModel;
+import com.irlyreza.wallot.activity.EditDebtMenu;
+import com.irlyreza.wallot.R;
+
 import java.util.ArrayList;
 
-public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizontalListAdapter.MyHolder> {
+public class DebtVerticalListAdapter extends RecyclerView.Adapter<DebtVerticalListAdapter.MyHolder> {
     ArrayList<DataDebtModel> model;
     Context context, fragmentContext;
 
-    public DebtHorizontalListAdapter(Context fragmentContext, Context context, ArrayList<DataDebtModel> model) {
+    public DebtVerticalListAdapter(Context fragmentContext, Context context, ArrayList<DataDebtModel> model) {
         this.context = context;
         this.model = model;
         this.fragmentContext = fragmentContext;
@@ -27,17 +31,15 @@ public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizont
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.recycle_view_debt_wallet_item, parent, false);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.recycle_view_vertical_debt_wallet_item, parent, false);
         return new MyHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
-        DataDebtModel dataDebtModel = this.model.get(position);
-        holder.namePerson.setText(dataDebtModel.getNamePerson());
-        holder.nominal.setText(dataDebtModel.getNominal());
-        holder.phone_number.setText(dataDebtModel.getPhoneNumber());
-        holder.description.setText(dataDebtModel.getDescription());
+//        holder.name.setText(this.model.get(position).name);
+//        holder.money.setText(this.model.get(position).money);
+//        holder.icon.setImageResource(this.model.get(position).icon);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,16 +59,14 @@ public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizont
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
-        TextView namePerson, nominal, description, phone_number;
+        TextView name, money;
         ImageView icon;
 
         public MyHolder(View itemView) {
             super(itemView);
-            namePerson = itemView.findViewById(R.id.debt_name_person);
+            name = itemView.findViewById(R.id.debt_name);
             icon = itemView.findViewById(R.id.debt_icon);
-            nominal = itemView.findViewById(R.id.debt_nominal);
-            description = itemView.findViewById(R.id.debt_description);
-            phone_number = itemView.findViewById(R.id.debt_number_phone);
+            money = itemView.findViewById(R.id.debt_nominal);
         }
     }
 }

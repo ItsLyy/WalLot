@@ -1,6 +1,5 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.activity;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,11 +21,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.adapter.WalletSpinnerAdapter;
+import com.irlyreza.wallot.data.DataTransactionModel;
+import com.irlyreza.wallot.data.DataWalletModel;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -35,31 +40,40 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class DebtMenu extends AppCompatActivity {
-    Button datePickerTransaction, saveTransaction, giverBtn, recieverBtn;
+public class TransactionMenu extends AppCompatActivity {
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference transactionReference = database.getReference("transactions");
+    DatabaseReference walletReference = database.getReference("wallets");
+
+
+    Button datePickerTransaction, saveTransaction, incomeBtn, outcomeBtn;
     EditText transactionNominal, transactionDescription;
     TextView transactionDescriptionLength;
     Spinner spinnerCategory;
     ArrayList<DataWalletModel> categoryList;
     WalletSpinnerAdapter walletSpinnerAdapter;
+
     int years, months, days;
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
-    String category;
+    String category, idWallet;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_debt_menu);
+        setContentView(R.layout.activity_transaction_menu);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         datePickerTransaction = findViewById(R.id.datePickerTransaction);
         saveTransaction = findViewById(R.id.save_transaction);
         spinnerCategory = findViewById(R.id.spinner_category);
-        giverBtn = findViewById(R.id.giver_btn);
-        recieverBtn = findViewById(R.id.reciever_btn);
+        incomeBtn = findViewById(R.id.income_btn);
+        outcomeBtn = findViewById(R.id.outcome_btn);
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
@@ -68,9 +82,9 @@ public class DebtMenu extends AppCompatActivity {
         String currentDateandTime = sdf.format(new Date());
         datePickerTransaction.setText(currentDateandTime);
 
-        giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
-        recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
-        recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+        incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+        outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+        outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
 
         transactionNominal.addTextChangedListener(new TextWatcher() {
             private  String setEditText = transactionNominal.getText().toString().trim();
@@ -118,28 +132,37 @@ public class DebtMenu extends AppCompatActivity {
             }
         });
 
-        giverBtn.setOnClickListener(new View.OnClickListener() {
+        incomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                giverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
-                giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
-                recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
-                recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                incomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+                incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+                outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+                outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
             }
         });
 
-        recieverBtn.setOnClickListener(new View.OnClickListener() {
+        outcomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
-                recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
-                giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
-                giverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+                outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+                incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+                incomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
             }
         });
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference walletReference = database.getReference("wallets");
+        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                category = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                category = parent.getItemAtPosition(0).toString();
+            }
+        });
 
         walletReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -164,18 +187,17 @@ public class DebtMenu extends AppCompatActivity {
 
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                category = parent.getItemAtPosition(position).toString();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                DataWalletModel dataWalletModel = (DataWalletModel) adapterView.getItemAtPosition(i);
+                idWallet = dataWalletModel.getId_wallet();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                category = parent.getItemAtPosition(0).toString();
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                DataWalletModel dataWalletModel = (DataWalletModel) adapterView.getItemAtPosition(0);
+                idWallet = dataWalletModel.getId_wallet();
             }
         });
-
-
-
 
         datePickerTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,7 +208,7 @@ public class DebtMenu extends AppCompatActivity {
                 days = calendar.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog;
-                dialog = new DatePickerDialog(DebtMenu.this, new DatePickerDialog.OnDateSetListener() {
+                dialog = new DatePickerDialog(TransactionMenu.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         years = year;
@@ -203,8 +225,7 @@ public class DebtMenu extends AppCompatActivity {
         saveTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                saveData(transactionNominal.getText().toString(), transactionDescription.getText().toString(), datePickerTransaction.getText().toString());
             }
         });
     }
@@ -217,5 +238,17 @@ public class DebtMenu extends AppCompatActivity {
         int length = split[0].length();
         return  split[0].substring(2,length);
 
+    }
+
+    private void saveData(String nominal, String description, String date) {
+        DataTransactionModel dataTransactionModel = new DataTransactionModel(nominal, description, date, idWallet);
+        String id_transaction = transactionReference.push().getKey();
+        transactionReference.child(id_transaction).setValue(dataTransactionModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

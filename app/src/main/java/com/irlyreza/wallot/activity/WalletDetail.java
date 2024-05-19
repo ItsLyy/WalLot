@@ -1,6 +1,5 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +13,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailDebt;
+import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailMember;
+import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailTransaction;
 
 public class WalletDetail extends AppCompatActivity {
     TextView nameWallet, nominalWallet;

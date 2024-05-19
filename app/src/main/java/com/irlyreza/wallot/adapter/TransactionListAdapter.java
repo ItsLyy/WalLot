@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.irlyreza.wallot.data.DataTransactionModel;
+import com.irlyreza.wallot.R;
 
 import java.util.ArrayList;
 

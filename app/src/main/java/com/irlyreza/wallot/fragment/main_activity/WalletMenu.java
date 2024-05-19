@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.fragment.main_activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,19 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.activity.AddWalletMenu;
+import com.irlyreza.wallot.adapter.WalletVerticallyListAdapter;
+import com.irlyreza.wallot.data.DataWalletModel;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.

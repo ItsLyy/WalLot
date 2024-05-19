@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -10,16 +10,25 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.adapter.WalletSpinnerAdapter;
+import com.irlyreza.wallot.data.DataWalletModel;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -28,36 +37,31 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class EditTransactionMenu extends AppCompatActivity {
-
-    Button datePickerTransaction, updateBtn;
-    ImageView deleteBtn;
+public class DebtMenu extends AppCompatActivity {
+    Button datePickerTransaction, saveTransaction, giverBtn, recieverBtn;
     EditText transactionNominal, transactionDescription;
     TextView transactionDescriptionLength;
     Spinner spinnerCategory;
+    ArrayList<DataWalletModel> categoryList;
+    WalletSpinnerAdapter walletSpinnerAdapter;
     int years, months, days;
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
     String category;
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_edit_transaction_menu);
+        setContentView(R.layout.activity_debt_menu);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-
         datePickerTransaction = findViewById(R.id.datePickerTransaction);
+        saveTransaction = findViewById(R.id.save_transaction);
         spinnerCategory = findViewById(R.id.spinner_category);
-        updateBtn = findViewById(R.id.update_btn);
-        deleteBtn = findViewById(R.id.delete_btn);
+        giverBtn = findViewById(R.id.giver_btn);
+        recieverBtn = findViewById(R.id.reciever_btn);
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
@@ -66,15 +70,9 @@ public class EditTransactionMenu extends AppCompatActivity {
         String currentDateandTime = sdf.format(new Date());
         datePickerTransaction.setText(currentDateandTime);
 
-        transactionNominal.setText(bundle.getString("nominal"));
-        transactionDescription.setText(bundle.getString("description"));
-        datePickerTransaction.setText(bundle.getString("date"));
-
-
-        updateBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
-        updateBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
-        deleteBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
-        deleteBtn.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+        giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+        recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+        recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
 
         transactionNominal.addTextChangedListener(new TextWatcher() {
             private  String setEditText = transactionNominal.getText().toString().trim();
@@ -108,12 +106,12 @@ public class EditTransactionMenu extends AppCompatActivity {
         transactionDescription.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                transactionDescriptionLength.setText(transactionDescription.length() + "/20");
+
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                transactionDescriptionLength.setText(transactionDescription.length() + "/20");
+                transactionDescriptionLength.setText(transactionDescription.length() + "/50");
             }
 
             @Override
@@ -122,16 +120,46 @@ public class EditTransactionMenu extends AppCompatActivity {
             }
         });
 
-        updateBtn.setOnClickListener(new View.OnClickListener() {
+        giverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                giverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+                giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+                recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+                recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
             }
         });
 
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
+        recieverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+                recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+                giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+                giverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+            }
+        });
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference walletReference = database.getReference("wallets");
+
+        walletReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                categoryList = new ArrayList<>();
+                for (DataSnapshot walletItem : snapshot.getChildren()) {
+                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
+                    dataWalletModel.setId_wallet(walletItem.getKey());
+                    categoryList.add(dataWalletModel);
+                }
+                if(getApplicationContext() != null) {
+                    walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
+                }
+                spinnerCategory.setAdapter(walletSpinnerAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
@@ -160,7 +188,7 @@ public class EditTransactionMenu extends AppCompatActivity {
                 days = calendar.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog;
-                dialog = new DatePickerDialog(EditTransactionMenu.this, new DatePickerDialog.OnDateSetListener() {
+                dialog = new DatePickerDialog(DebtMenu.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         years = year;
@@ -174,6 +202,13 @@ public class EditTransactionMenu extends AppCompatActivity {
             }
         });
 
+        saveTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private String formatRupiah(Double number) {

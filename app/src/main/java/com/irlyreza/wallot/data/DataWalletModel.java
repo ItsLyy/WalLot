@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.data;
 
 public class DataWalletModel {
     String id_wallet, name, nominal;

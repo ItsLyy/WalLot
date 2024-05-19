@@ -1,7 +1,6 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.fragment.wallet_detail;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.os.Bundle;
 
@@ -13,7 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
+
+import com.irlyreza.wallot.R;
 
 /**
  * A simple {@link Fragment} subclass.

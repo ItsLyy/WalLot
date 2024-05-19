@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.data;
 
 public class DataTransactionModel {
     String id_transaction, nominal, description, date, id_wallet;

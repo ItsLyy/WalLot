@@ -13,35 +13,35 @@
         android:theme="@style/Theme.WalLot"
         tools:targetApi="31">
         <activity
-            android:name=".AddWalletMenu"
+            android:name=".activity.AddWalletMenu"
             android:exported="false"
             android:theme="@style/Theme.WalLot" />
         <activity
-            android:name=".AddFriendOverlay"
+            android:name=".overlay.AddFriendOverlay"
             android:exported="false" />
         <activity
-            android:name=".EditDebtMenu"
+            android:name=".activity.EditDebtMenu"
             android:exported="false" />
         <activity
-            android:name=".EditTransactionMenu"
+            android:name=".activity.EditTransactionMenu"
             android:exported="false" />
         <activity
-            android:name=".TransactionMenu"
+            android:name=".activity.TransactionMenu"
             android:exported="false" />
         <activity
-            android:name=".WalletDetail"
+            android:name=".activity.WalletDetail"
             android:exported="false" />
         <activity
-            android:name=".DebtMenu"
+            android:name=".activity.DebtMenu"
             android:exported="false" />
         <activity
-            android:name=".HomeMenu"
+            android:name=".fragment.main_activity.HomeMenu"
             android:exported="false" />
         <activity
-            android:name=".Transaction"
+            android:name=".overlay.Transaction"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

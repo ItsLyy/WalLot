@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:id="@+id/main"
     android:layout_height="match_parent"
-    tools:context=".WalletDetail">
+    tools:context=".activity.WalletDetail">
 
     <ScrollView
         android:layout_width="match_parent"

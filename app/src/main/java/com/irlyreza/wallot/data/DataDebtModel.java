@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.data;
 
 public class DataDebtModel {
     String id_debt, namePerson, nominal, description, phoneNumber, date, id_wallet, id_user, type;

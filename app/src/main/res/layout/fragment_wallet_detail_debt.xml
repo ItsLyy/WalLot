@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WalletDetailDebt">
+    tools:context=".fragment.wallet_detail.WalletDetailDebt">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_height="match_parent"

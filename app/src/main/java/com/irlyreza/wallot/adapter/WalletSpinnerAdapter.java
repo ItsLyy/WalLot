@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,11 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.irlyreza.wallot.data.DataWalletModel;
+import com.irlyreza.wallot.R;
+
 import java.util.ArrayList;
 
 public class WalletSpinnerAdapter extends ArrayAdapter<DataWalletModel> {
     LayoutInflater layoutInflater;
-    WalletSpinnerAdapter(Context context, ArrayList<DataWalletModel> model) {
+    public WalletSpinnerAdapter(Context context, ArrayList<DataWalletModel> model) {
         super(context, R.layout.spinner_wallet_item, model);
     }
 

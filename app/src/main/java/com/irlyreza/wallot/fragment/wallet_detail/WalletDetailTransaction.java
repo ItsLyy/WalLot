@@ -1,13 +1,10 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.fragment.wallet_detail;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +17,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.activity.EditTransactionMenu;
+import com.irlyreza.wallot.adapter.TransactionListAdapter;
+import com.irlyreza.wallot.data.DataTransactionModel;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomeMenu#newInstance} factory method to
+ * Use the {@link WalletDetailTransaction#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeMenu extends Fragment {
+public class WalletDetailTransaction extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,20 +39,14 @@ public class HomeMenu extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ListView newestTransaction;
-    RecyclerView horizontalWallet;
-    RecyclerView horizontalDebt;
-    LinearLayoutManager linearLayoutManager, linearLayoutManager1;
 
+    ListView walletTransaction;
     TransactionListAdapter transactionListAdapter;
-    WalletHorizontalListAdapter walletHorizontalListAdapter;
-    DebtHorizontalListAdapter debtHorizontalListAdapter;
     ArrayList<DataTransactionModel> transactionArray;
-    ArrayList<DataWalletModel> walletArray;
-    ArrayList<DataDebtModel> debtArray;
+    ArrayList<WalLot_Data.Debt_Data> debtArray;
+    String idWallet;
 
-
-    public HomeMenu() {
+    public WalletDetailTransaction() {
         // Required empty public constructor
     }
 
@@ -61,11 +56,11 @@ public class HomeMenu extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeMenus.
+     * @return A new instance of fragment WalletDetailTransaction.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeMenu newInstance(String param1, String param2) {
-        HomeMenu fragment = new HomeMenu();
+    public static WalletDetailTransaction newInstance(String param1, String param2) {
+        WalletDetailTransaction fragment = new WalletDetailTransaction();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -85,20 +80,14 @@ public class HomeMenu extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home_menu, container, false);
-        newestTransaction = view.findViewById(R.id.newest_transaction);
-        horizontalWallet = view.findViewById(R.id.horizontal_wallet_list);
-        horizontalDebt = view.findViewById(R.id.horizontal_debt_list);
-        linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-        horizontalWallet.setLayoutManager(linearLayoutManager);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_wallet_detail_transaction, container, false);
         addData();
-        debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity() ,getActivity().getApplicationContext(), debtArray);
-        linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        horizontalDebt.setLayoutManager(linearLayoutManager1);
-        horizontalDebt.setAdapter(debtHorizontalListAdapter);
+        walletTransaction = view.findViewById(R.id.wallet_transaction_list);
 
-        newestTransaction.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        walletTransaction.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), EditTransactionMenu.class);
@@ -109,26 +98,33 @@ public class HomeMenu extends Fragment {
             }
         });
 
-        // Inflate the layout for this fragment
+
+
         return view;
     }
 
     void addData() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference transactionReference = database.getReference("transactions");
-        DatabaseReference walletReference = database.getReference("wallets");
+        idWallet = this.getArguments().getString("idWallet");
 
         transactionReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 transactionArray = new ArrayList<>();
                 for (DataSnapshot transactionItem: snapshot.getChildren()) {
-                    DataTransactionModel dataTransactionModel = transactionItem.getValue(DataTransactionModel.class);
-                    transactionArray.add(dataTransactionModel);
+                    DataTransactionModel dataTransactionModel = new DataTransactionModel();
+                    if (transactionItem.child("id_wallet").getValue(String.class).equals(idWallet)) {
+                        dataTransactionModel.setId_transaction(transactionItem.getKey());
+                        dataTransactionModel.setDate(transactionItem.child("date").getValue(String.class));
+                        dataTransactionModel.setDescription(transactionItem.child("description").getValue(String.class));
+                        dataTransactionModel.setNominal(transactionItem.child("nominal").getValue(String.class));
+                        transactionArray.add(dataTransactionModel);
+                    }
                 }
                 if (getActivity() != null) {
                     transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
-                    newestTransaction.setAdapter(transactionListAdapter);
+                    walletTransaction.setAdapter(transactionListAdapter);
                 }
             }
 
@@ -137,29 +133,10 @@ public class HomeMenu extends Fragment {
 
             }
         });
-
-        walletReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                walletArray = new ArrayList<>();
-                for (DataSnapshot walletItem : snapshot.getChildren()) {
-                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
-                    dataWalletModel.setId_wallet(walletItem.getKey());
-                    walletArray.add(dataWalletModel);
-                }
-                if(getActivity() != null) {
-                    walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity(), getActivity().getApplicationContext(), walletArray);
-                }
-                horizontalWallet.setAdapter(walletHorizontalListAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
         debtArray = new ArrayList<>();
-
+        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
+        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
+        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
+        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
     }
 }

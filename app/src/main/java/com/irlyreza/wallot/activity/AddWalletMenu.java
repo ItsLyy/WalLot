@@ -1,11 +1,10 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -24,14 +23,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.irlyreza.wallot.databinding.ActivityAddWalletMenuBinding;
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.data.DataWalletModel;
 
 public class AddWalletMenu extends AppCompatActivity {
     EditText nameWallet;

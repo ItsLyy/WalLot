@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.irlyreza.wallot.data.DataWalletModel;
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.activity.WalletDetail;
 
 import java.util.ArrayList;
 
