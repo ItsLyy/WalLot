@@ -11,16 +11,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 public class WalletVerticallyListAdapter extends RecyclerView.Adapter<WalletVerticallyListAdapter.MyHolder> {
-    ArrayList<WalLot_Data.Wallet_Data> model;
+    ArrayList<DataWalletModel> model;
     Context context;
     Context fragmentContext;
 
-    public WalletVerticallyListAdapter(Context fragmentContext, Context context, ArrayList<WalLot_Data.Wallet_Data> model) {
+    public WalletVerticallyListAdapter(Context fragmentContext, Context context, ArrayList<DataWalletModel> model) {
         this.context = context;
         this.model = model;
         this.fragmentContext = fragmentContext;
@@ -36,17 +37,19 @@ public class WalletVerticallyListAdapter extends RecyclerView.Adapter<WalletVert
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.name.setText(this.model.get(position).name);
-        holder.money.setText(this.model.get(position).money);
+        holder.money.setText(this.model.get(position).nominal);
         holder.icon.setImageResource(this.model.get(position).icon);
+        holder.icon.setBackground(ContextCompat.getDrawable(context, this.model.get(position).getBgIcon()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragmentContext, WalletDetail.class);
+                intent.putExtra("idWallet", model.get(position).id_wallet);
                 intent.putExtra("name", model.get(position).name);
-                intent.putExtra("money", model.get(position).money);
-                intent.putExtra("date", model.get(position).date);
+                intent.putExtra("nominal", model.get(position).nominal);
                 intent.putExtra("icon", model.get(position).icon);
+                intent.putExtra("bgIcon", model.get(position).bgIcon);
 
                 fragmentContext.startActivity(intent);
             }

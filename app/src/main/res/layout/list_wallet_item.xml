@@ -24,7 +24,9 @@
             android:background="@drawable/category_bg_icon"
             android:src="@drawable/category_cash_icon"
             android:layout_gravity="center"
-            android:id="@+id/icon_wallet_item"/>
+            android:id="@+id/icon_wallet_item"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint"/>
 
         <LinearLayout
             android:layout_width="match_parent"

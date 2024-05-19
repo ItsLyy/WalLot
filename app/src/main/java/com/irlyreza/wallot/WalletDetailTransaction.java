@@ -3,6 +3,7 @@ package com.irlyreza.wallot;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -10,6 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -31,8 +39,9 @@ public class WalletDetailTransaction extends Fragment {
 
     ListView walletTransaction;
     TransactionListAdapter transactionListAdapter;
-    ArrayList<WalLot_Data.Transaction_Data> transactionArray;
+    ArrayList<DataTransactionModel> transactionArray;
     ArrayList<WalLot_Data.Debt_Data> debtArray;
+    String idWallet;
 
     public WalletDetailTransaction() {
         // Required empty public constructor
@@ -71,17 +80,17 @@ public class WalletDetailTransaction extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_wallet_detail_transaction, container, false);
         addData();
-        transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
+
         walletTransaction = view.findViewById(R.id.wallet_transaction_list);
-        walletTransaction.setAdapter(transactionListAdapter);
+
 
         walletTransaction.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), EditTransactionMenu.class);
-                intent.putExtra("nominal", transactionArray.get(i).money);
-                intent.putExtra("description", transactionArray.get(i).category);
-                intent.putExtra("date", transactionArray.get(i).date);
+//                intent.putExtra("nominal", transactionArray.get(i).money);
+//                intent.putExtra("description", transactionArray.get(i).category);
+//                intent.putExtra("date", transactionArray.get(i).date);
                 startActivity(intent);
             }
         });
@@ -92,12 +101,35 @@ public class WalletDetailTransaction extends Fragment {
     }
 
     void addData() {
-        transactionArray = new ArrayList<>();
-        transactionArray.add(new WalLot_Data.Transaction_Data("Cash", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new WalLot_Data.Transaction_Data("Wallet", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new WalLot_Data.Transaction_Data("coawij", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new WalLot_Data.Transaction_Data("ejkf", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference transactionReference = database.getReference("transactions");
+        idWallet = this.getArguments().getString("idWallet");
 
+        transactionReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                transactionArray = new ArrayList<>();
+                for (DataSnapshot transactionItem: snapshot.getChildren()) {
+                    DataTransactionModel dataTransactionModel = new DataTransactionModel();
+                    if (transactionItem.child("id_wallet").getValue(String.class).equals(idWallet)) {
+                        dataTransactionModel.setId_transaction(transactionItem.getKey());
+                        dataTransactionModel.setDate(transactionItem.child("date").getValue(String.class));
+                        dataTransactionModel.setDescription(transactionItem.child("description").getValue(String.class));
+                        dataTransactionModel.setNominal(transactionItem.child("nominal").getValue(String.class));
+                        transactionArray.add(dataTransactionModel);
+                    }
+                }
+                if (getActivity() != null) {
+                    transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
+                    walletTransaction.setAdapter(transactionListAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         debtArray = new ArrayList<>();
         debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
         debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));

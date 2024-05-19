@@ -15,22 +15,33 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class DebtMenu extends AppCompatActivity {
-    Button datePickerTransaction, saveTransaction, incomeBtn, outcomeBtn;
+    Button datePickerTransaction, saveTransaction, giverBtn, recieverBtn;
     EditText transactionNominal, transactionDescription;
     TextView transactionDescriptionLength;
     Spinner spinnerCategory;
+    ArrayList<DataWalletModel> categoryList;
+    WalletSpinnerAdapter walletSpinnerAdapter;
     int years, months, days;
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
@@ -47,15 +58,19 @@ public class DebtMenu extends AppCompatActivity {
         datePickerTransaction = findViewById(R.id.datePickerTransaction);
         saveTransaction = findViewById(R.id.save_transaction);
         spinnerCategory = findViewById(R.id.spinner_category);
-        incomeBtn = findViewById(R.id.income_btn);
-        outcomeBtn = findViewById(R.id.outcome_btn);
+        giverBtn = findViewById(R.id.giver_btn);
+        recieverBtn = findViewById(R.id.reciever_btn);
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
 
-        incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
-        outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
-        outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String currentDateandTime = sdf.format(new Date());
+        datePickerTransaction.setText(currentDateandTime);
+
+        giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+        recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+        recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
 
         transactionNominal.addTextChangedListener(new TextWatcher() {
             private  String setEditText = transactionNominal.getText().toString().trim();
@@ -103,23 +118,47 @@ public class DebtMenu extends AppCompatActivity {
             }
         });
 
-        incomeBtn.setOnClickListener(new View.OnClickListener() {
+        giverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                incomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
-                incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
-                outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
-                outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                giverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+                giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+                recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+                recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
             }
         });
 
-        outcomeBtn.setOnClickListener(new View.OnClickListener() {
+        recieverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
-                outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
-                incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
-                incomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
+                recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+                giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
+                giverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+            }
+        });
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference walletReference = database.getReference("wallets");
+
+        walletReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                categoryList = new ArrayList<>();
+                for (DataSnapshot walletItem : snapshot.getChildren()) {
+                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
+                    dataWalletModel.setId_wallet(walletItem.getKey());
+                    categoryList.add(dataWalletModel);
+                }
+                if(getApplicationContext() != null) {
+                    walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
+                }
+                spinnerCategory.setAdapter(walletSpinnerAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 
@@ -135,12 +174,7 @@ public class DebtMenu extends AppCompatActivity {
             }
         });
 
-        ArrayList<WalLot_Data.Wallet_Data> categoryList = new ArrayList<>();
-        categoryList.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        categoryList.add(new WalLot_Data.Wallet_Data("DKA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        categoryList.add(new WalLot_Data.Wallet_Data("CBA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        WalletSpinnerAdapter walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
-        spinnerCategory.setAdapter(walletSpinnerAdapter);
+
 
 
         datePickerTransaction.setOnClickListener(new View.OnClickListener() {

@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizontalListAdapter.MyHolder> {
-    ArrayList<WalLot_Data.Debt_Data> model;
+    ArrayList<DataDebtModel> model;
     Context context, fragmentContext;
 
-    public DebtHorizontalListAdapter(Context fragmentContext, Context context, ArrayList<WalLot_Data.Debt_Data> model) {
+    public DebtHorizontalListAdapter(Context fragmentContext, Context context, ArrayList<DataDebtModel> model) {
         this.context = context;
         this.model = model;
         this.fragmentContext = fragmentContext;
@@ -33,16 +33,18 @@ public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizont
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.name.setText(this.model.get(position).name);
-        holder.money.setText(this.model.get(position).money);
-        holder.icon.setImageResource(this.model.get(position).icon);
+        DataDebtModel dataDebtModel = this.model.get(position);
+        holder.namePerson.setText(dataDebtModel.getNamePerson());
+        holder.nominal.setText(dataDebtModel.getNominal());
+        holder.phone_number.setText(dataDebtModel.getPhoneNumber());
+        holder.description.setText(dataDebtModel.getDescription());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragmentContext, EditDebtMenu.class);
-                intent.putExtra("name", model.get(position).name);
-                intent.putExtra("money", model.get(position).money);
-                intent.putExtra("date", model.get(position).date);
+//                intent.putExtra("name", model.get(position).name);
+//                intent.putExtra("money", model.get(position).money);
+//                intent.putExtra("date", model.get(position).date);
 
                 fragmentContext.startActivity(intent);
             }
@@ -55,14 +57,16 @@ public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizont
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
-        TextView name, money;
+        TextView namePerson, nominal, description, phone_number;
         ImageView icon;
 
         public MyHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.debt_name);
+            namePerson = itemView.findViewById(R.id.debt_name_person);
             icon = itemView.findViewById(R.id.debt_icon);
-            money = itemView.findViewById(R.id.debt_nominal);
+            nominal = itemView.findViewById(R.id.debt_nominal);
+            description = itemView.findViewById(R.id.debt_description);
+            phone_number = itemView.findViewById(R.id.debt_number_phone);
         }
     }
 }

@@ -10,38 +10,35 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
-public class WalletSpinnerAdapter extends ArrayAdapter<WalLot_Data.Wallet_Data> {
+public class WalletSpinnerAdapter extends ArrayAdapter<DataWalletModel> {
     LayoutInflater layoutInflater;
-    WalletSpinnerAdapter(Context context, ArrayList<WalLot_Data.Wallet_Data> model) {
+    WalletSpinnerAdapter(Context context, ArrayList<DataWalletModel> model) {
         super(context, R.layout.spinner_wallet_item, model);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         view = LayoutInflater.from(getContext()).inflate(R.layout.spinner_wallet_item, null, true);
-        WalLot_Data.Wallet_Data walletData = getItem(position);
+        DataWalletModel walletData = getItem(position);
 
         TextView category = view.findViewById(R.id.spinner_wallet_name);
         ImageView icon = view.findViewById(R.id.spinner_wallet_icon);
 
         category.setText(walletData.name);
         icon.setImageResource(walletData.icon);
+        icon.setBackground(ContextCompat.getDrawable(getContext(), walletData.getBgIcon()));
 
         return view;
     }
 
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        WalLot_Data.Wallet_Data walletData = getItem(position);
+        DataWalletModel walletData = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.spinner_wallet_item, null, false);
@@ -52,6 +49,7 @@ public class WalletSpinnerAdapter extends ArrayAdapter<WalLot_Data.Wallet_Data> 
 
         category.setText(walletData.name);
         icon.setImageResource(walletData.icon);
+        icon.setBackground(ContextCompat.getDrawable(getContext(), walletData.getBgIcon()));
 
         return convertView;
     }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,8 +18,11 @@ import androidx.core.view.WindowInsetsCompat;
 public class WalletDetail extends AppCompatActivity {
     TextView nameWallet, nominalWallet;
     ImageView iconWallet, iconMember, iconTransaction, iconDebt;
+    RelativeLayout backgroundContainer;
 
     LinearLayout memberBtn, transactionBtn, debtBtn;
+
+    String idWallet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,10 +36,27 @@ public class WalletDetail extends AppCompatActivity {
         nameWallet = findViewById(R.id.wallet_name);
         nominalWallet = findViewById(R.id.wallet_nominal);
         iconWallet = findViewById(R.id.wallet_icon);
+        backgroundContainer = findViewById(R.id.background_container);
+
         Bundle bundle = getIntent().getExtras();
         nameWallet.setText(bundle.getString("name"));
-        nominalWallet.setText(bundle.getString("money"));
+        nominalWallet.setText(bundle.getString("nominal"));
         iconWallet.setImageResource(bundle.getInt("icon"));
+        idWallet = bundle.getString("idWallet");
+
+        if(bundle.getInt("bgIcon") == R.drawable.bg_corner_gradient_blue) {
+            backgroundContainer.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_gradient_blue));
+            iconWallet.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_icon_gradient_blue));
+        } else if (bundle.getInt("bgIcon") == R.drawable.bg_corner_gradient_green) {
+            backgroundContainer.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_gradient_green));
+            iconWallet.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_icon_gradient_green));
+        } else if (bundle.getInt("bgIcon") == R.drawable.bg_corner_gradient_red) {
+            backgroundContainer.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_gradient_red));
+            iconWallet.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_icon_gradient_red));
+        } else if (bundle.getInt("bgIcon") == R.drawable.bg_corner_gradient_purple) {
+            backgroundContainer.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_gradient_purple));
+            iconWallet.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_icon_gradient_purple));
+        }
 
         memberBtn = findViewById(R.id.member_btn);
         transactionBtn = findViewById(R.id.transaction_btn);
@@ -84,9 +105,14 @@ public class WalletDetail extends AppCompatActivity {
                 debtBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_right_btn));
                 iconDebt.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
 
+                Bundle transactionBundle = new Bundle();
+                transactionBundle.putString("idWallet", idWallet);
+                WalletDetailTransaction walletDetailTransaction = new WalletDetailTransaction();
+                walletDetailTransaction.setArguments(transactionBundle);
+
                 getSupportFragmentManager().beginTransaction().
                         setReorderingAllowed(true).
-                        replace(R.id.fragment_wallet_detail_container, WalletDetailTransaction.class, null).
+                        replace(R.id.fragment_wallet_detail_container, walletDetailTransaction).
                         commit();
             }
         });
@@ -109,6 +135,5 @@ public class WalletDetail extends AppCompatActivity {
                 iconDebt.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
             }
         });
-
     }
 }

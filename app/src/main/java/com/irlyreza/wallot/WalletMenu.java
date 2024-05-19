@@ -1,7 +1,9 @@
 package com.irlyreza.wallot;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,9 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +43,8 @@ public class WalletMenu extends Fragment {
 
     WalletVerticallyListAdapter walletVerticallyListAdapter;
     RecyclerView walletList;
-    ArrayList<WalLot_Data.Wallet_Data> walletData;
+    ArrayList<DataWalletModel> walletData;
+    LinearLayout walletAddBtn;
 
 
     public WalletMenu() {
@@ -70,26 +83,46 @@ public class WalletMenu extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet_menu, container, false);
         walletList = view.findViewById(R.id.vertical_wallet_list);
+        walletAddBtn = view.findViewById(R.id.add_wallet);
         addData();
-        walletVerticallyListAdapter = new WalletVerticallyListAdapter(getActivity(), getActivity().getApplicationContext(), walletData);
         walletList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        walletList.setAdapter(walletVerticallyListAdapter);
+
+        walletAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), AddWalletMenu.class);
+                getActivity().startActivity(intent);
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;
     }
 
     void addData() {
-        walletData = new ArrayList<>();
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletData.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference walletReference = database.getReference("wallets");
+        walletReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                walletData = new ArrayList<>();
+                for (DataSnapshot walletItem : snapshot.getChildren()) {
+                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
+                    dataWalletModel.setId_wallet(walletItem.getKey());
+                    walletData.add(dataWalletModel);
+                }
+                if(getActivity() != null) {
+                    walletVerticallyListAdapter = new WalletVerticallyListAdapter(getActivity(), getActivity().getApplicationContext(), walletData);
+                    walletList.setAdapter(walletVerticallyListAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
+
+
 }

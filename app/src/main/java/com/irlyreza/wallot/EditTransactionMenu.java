@@ -22,8 +22,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class EditTransactionMenu extends AppCompatActivity {
@@ -59,6 +61,10 @@ public class EditTransactionMenu extends AppCompatActivity {
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String currentDateandTime = sdf.format(new Date());
+        datePickerTransaction.setText(currentDateandTime);
 
         transactionNominal.setText(bundle.getString("nominal"));
         transactionDescription.setText(bundle.getString("description"));
@@ -142,12 +148,7 @@ public class EditTransactionMenu extends AppCompatActivity {
             }
         });
 
-        ArrayList<WalLot_Data.Wallet_Data> categoryList = new ArrayList<>();
-        categoryList.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        categoryList.add(new WalLot_Data.Wallet_Data("DKA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        categoryList.add(new WalLot_Data.Wallet_Data("CBA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        WalletSpinnerAdapter walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
-        spinnerCategory.setAdapter(walletSpinnerAdapter);
+
 
 
         datePickerTransaction.setOnClickListener(new View.OnClickListener() {

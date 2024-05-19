@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class TransactionListAdapter extends ArrayAdapter<WalLot_Data.Transaction_Data> {
-    TransactionListAdapter(Context context, ArrayList<WalLot_Data.Transaction_Data> model) {
+public class TransactionListAdapter extends ArrayAdapter<DataTransactionModel> {
+    TransactionListAdapter(Context context, ArrayList<DataTransactionModel> model) {
         super(context, R.layout.list_transaction_item, model);
     }
 
@@ -26,7 +26,7 @@ public class TransactionListAdapter extends ArrayAdapter<WalLot_Data.Transaction
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
-        WalLot_Data.Transaction_Data transactionData = getItem(position);
+        DataTransactionModel transactionData = getItem(position);
 
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_transaction_item, parent, false);
@@ -37,10 +37,9 @@ public class TransactionListAdapter extends ArrayAdapter<WalLot_Data.Transaction
         TextView money = view.findViewById(R.id.money_transaction_item);
         ImageView icon = view.findViewById(R.id.icon_transaction_item);
 
-        category.setText(transactionData.category);
+        category.setText(transactionData.description);
         date.setText(transactionData.date);
-        money.setText(transactionData.money);
-        icon.setImageResource(transactionData.icon);
+        money.setText(transactionData.nominal);
 
         return view;
     }

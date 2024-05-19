@@ -3,7 +3,9 @@ package com.irlyreza.wallot;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -38,9 +46,9 @@ public class HomeMenu extends Fragment {
     TransactionListAdapter transactionListAdapter;
     WalletHorizontalListAdapter walletHorizontalListAdapter;
     DebtHorizontalListAdapter debtHorizontalListAdapter;
-    ArrayList<WalLot_Data.Transaction_Data> transactionArray;
-    ArrayList<WalLot_Data.Wallet_Data> walletArray;
-    ArrayList<WalLot_Data.Debt_Data> debtArray;
+    ArrayList<DataTransactionModel> transactionArray;
+    ArrayList<DataWalletModel> walletArray;
+    ArrayList<DataDebtModel> debtArray;
 
 
     public HomeMenu() {
@@ -81,15 +89,12 @@ public class HomeMenu extends Fragment {
         newestTransaction = view.findViewById(R.id.newest_transaction);
         horizontalWallet = view.findViewById(R.id.horizontal_wallet_list);
         horizontalDebt = view.findViewById(R.id.horizontal_debt_list);
-        addData();
-        transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
-        walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity(), getActivity().getApplicationContext(), walletArray);
-        debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity() ,getActivity().getApplicationContext(), debtArray);
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-        linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-        newestTransaction.setAdapter(transactionListAdapter);
         horizontalWallet.setLayoutManager(linearLayoutManager);
-        horizontalWallet.setAdapter(walletHorizontalListAdapter);
+        addData();
+        debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity() ,getActivity().getApplicationContext(), debtArray);
+        linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+
         horizontalDebt.setLayoutManager(linearLayoutManager1);
         horizontalDebt.setAdapter(debtHorizontalListAdapter);
 
@@ -97,9 +102,9 @@ public class HomeMenu extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), EditTransactionMenu.class);
-                intent.putExtra("nominal", transactionArray.get(i).money);
-                intent.putExtra("description", transactionArray.get(i).category);
-                intent.putExtra("date", transactionArray.get(i).date);
+//                intent.putExtra("nominal", transactionArray.get(i).money);
+//                intent.putExtra("description", transactionArray.get(i).category);
+//                intent.putExtra("date", transactionArray.get(i).date);
                 startActivity(intent);
             }
         });
@@ -109,23 +114,52 @@ public class HomeMenu extends Fragment {
     }
 
     void addData() {
-        transactionArray = new ArrayList<>();
-        transactionArray.add(new WalLot_Data.Transaction_Data("Cash", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new WalLot_Data.Transaction_Data("Wallet", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new WalLot_Data.Transaction_Data("coawij", "20.000", "12-12-2012", R.drawable.category_cash_icon));
-        transactionArray.add(new WalLot_Data.Transaction_Data("ejkf", "20.000", "12-12-2012", R.drawable.category_cash_icon));
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference transactionReference = database.getReference("transactions");
+        DatabaseReference walletReference = database.getReference("wallets");
 
-        walletArray = new ArrayList<>();
-        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        walletArray.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
+        transactionReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                transactionArray = new ArrayList<>();
+                for (DataSnapshot transactionItem: snapshot.getChildren()) {
+                    DataTransactionModel dataTransactionModel = transactionItem.getValue(DataTransactionModel.class);
+                    transactionArray.add(dataTransactionModel);
+                }
+                if (getActivity() != null) {
+                    transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
+                    newestTransaction.setAdapter(transactionListAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        walletReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                walletArray = new ArrayList<>();
+                for (DataSnapshot walletItem : snapshot.getChildren()) {
+                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
+                    dataWalletModel.setId_wallet(walletItem.getKey());
+                    walletArray.add(dataWalletModel);
+                }
+                if(getActivity() != null) {
+                    walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity(), getActivity().getApplicationContext(), walletArray);
+                }
+                horizontalWallet.setAdapter(walletHorizontalListAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         debtArray = new ArrayList<>();
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
+
     }
 }

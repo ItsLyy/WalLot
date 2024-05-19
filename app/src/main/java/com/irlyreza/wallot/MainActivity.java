@@ -19,17 +19,34 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    ImageView homeIcon;
+    ImageView reportIcon;
+    ImageView groupIcon;
+    ImageView profileIcon;
+
+    TextView homeLabel;
+    TextView reportLabel;
+    TextView groupLabel;
+    TextView profileLabel;
+
+
     LinearLayout homeBtn;
     LinearLayout reportBtn;
     LinearLayout groupBtn;
@@ -38,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
     RelativeLayout bodyContainer;
     ListView listTest;
+    static public int totalBalance;
+    String displayBalance;
 
     private int selectedTab = 1;
 
@@ -56,10 +75,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
+        loadData();
 
         // Bottom Navigatior == Start
 
@@ -69,15 +85,7 @@ public class MainActivity extends AppCompatActivity {
         profileBtn = findViewById(R.id.btn_profile);
         plusTransactionBtn = findViewById(R.id.btn_plus_transaction);
 
-        ImageView homeIcon;
-        ImageView reportIcon;
-        ImageView groupIcon;
-        ImageView profileIcon;
 
-        TextView homeLabel;
-        TextView reportLabel;
-        TextView groupLabel;
-        TextView profileLabel;
 
         homeIcon = findViewById(R.id.icon_home);
         reportIcon = findViewById(R.id.icon_report);
@@ -287,5 +295,58 @@ public class MainActivity extends AppCompatActivity {
         // Bottom Navigator == End
 
 
+    }
+
+    public void loadData() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference walletReference = database.getReference("wallets");
+        DatabaseReference transactionReference = database.getReference("transactions");
+
+        walletReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshotWallet) {
+                transactionReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshotTransaction) {
+                        for (DataSnapshot walletItem : snapshotWallet.getChildren()) {
+                            totalBalance = 0;
+                            displayBalance = "";
+                            for (DataSnapshot transactionItem : snapshotTransaction.getChildren()) {
+                                if (transactionItem.child("id_wallet").getValue(String.class).equals(walletItem.getKey())) {
+                                    totalBalance += Integer.parseInt(unformatRupiah(transactionItem.child("nominal").getValue(String.class)));
+                                }
+                            }
+                            displayBalance = String.valueOf(totalBalance);
+                            String replace = displayBalance.toString().replaceAll("[Rp. ]", "");
+                            walletReference.child(walletItem.getKey()).child("nominal").setValue(formatRupiah(Double.parseDouble(replace)));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private String formatRupiah(Double number) {
+        Locale localeId = new Locale("IND", "ID");
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(localeId);
+        String formatrupiah = numberFormat.format(number);
+        String[] split = formatrupiah.split(",");
+        int length = split[0].length();
+        return  split[0].substring(2,length);
+    }
+
+    private String unformatRupiah(String number) {
+        String split = number.replace(".", "");
+        return  split;
     }
 }

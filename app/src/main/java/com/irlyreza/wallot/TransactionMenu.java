@@ -2,13 +2,11 @@ package com.irlyreza.wallot;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -16,28 +14,45 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.text.NumberFormat;
-import java.time.Year;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class TransactionMenu extends AppCompatActivity {
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference transactionReference = database.getReference("transactions");
+    DatabaseReference walletReference = database.getReference("wallets");
+
+
     Button datePickerTransaction, saveTransaction, incomeBtn, outcomeBtn;
     EditText transactionNominal, transactionDescription;
     TextView transactionDescriptionLength;
     Spinner spinnerCategory;
+    ArrayList<DataWalletModel> categoryList;
+    WalletSpinnerAdapter walletSpinnerAdapter;
+
     int years, months, days;
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
-    String category;
+    String category, idWallet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +64,7 @@ public class TransactionMenu extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         datePickerTransaction = findViewById(R.id.datePickerTransaction);
         saveTransaction = findViewById(R.id.save_transaction);
         spinnerCategory = findViewById(R.id.spinner_category);
@@ -57,6 +73,10 @@ public class TransactionMenu extends AppCompatActivity {
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String currentDateandTime = sdf.format(new Date());
+        datePickerTransaction.setText(currentDateandTime);
 
         incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
         outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
@@ -140,13 +160,40 @@ public class TransactionMenu extends AppCompatActivity {
             }
         });
 
-        ArrayList<WalLot_Data.Wallet_Data> categoryList = new ArrayList<>();
-        categoryList.add(new WalLot_Data.Wallet_Data("MSA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        categoryList.add(new WalLot_Data.Wallet_Data("DKA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        categoryList.add(new WalLot_Data.Wallet_Data("CBA", "20.0000", "12-20-2012", R.drawable.category_cash_icon));
-        WalletSpinnerAdapter walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
-        spinnerCategory.setAdapter(walletSpinnerAdapter);
+        walletReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                categoryList = new ArrayList<>();
+                for (DataSnapshot walletItem : snapshot.getChildren()) {
+                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
+                    dataWalletModel.setId_wallet(walletItem.getKey());
+                    categoryList.add(dataWalletModel);
+                }
+                if(getApplicationContext() != null) {
+                    walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
+                }
+                spinnerCategory.setAdapter(walletSpinnerAdapter);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                DataWalletModel dataWalletModel = (DataWalletModel) adapterView.getItemAtPosition(i);
+                idWallet = dataWalletModel.getId_wallet();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                DataWalletModel dataWalletModel = (DataWalletModel) adapterView.getItemAtPosition(0);
+                idWallet = dataWalletModel.getId_wallet();
+            }
+        });
 
         datePickerTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,8 +221,7 @@ public class TransactionMenu extends AppCompatActivity {
         saveTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                saveData(transactionNominal.getText().toString(), transactionDescription.getText().toString(), datePickerTransaction.getText().toString());
             }
         });
     }
@@ -188,5 +234,17 @@ public class TransactionMenu extends AppCompatActivity {
         int length = split[0].length();
         return  split[0].substring(2,length);
 
+    }
+
+    private void saveData(String nominal, String description, String date) {
+        DataTransactionModel dataTransactionModel = new DataTransactionModel(nominal, description, date, idWallet);
+        String id_transaction = transactionReference.push().getKey();
+        transactionReference.child(id_transaction).setValue(dataTransactionModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

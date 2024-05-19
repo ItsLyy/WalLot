@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="60dp"
     android:layout_height="90dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,7 +14,9 @@
         android:id="@+id/wallet_icon"
         android:padding="10dp"
         android:background="@drawable/category_bg_icon"
-        android:src="@drawable/category_cash_icon"/>
+        android:src="@drawable/category_cash_icon"
+        android:tint="@color/white"
+        tools:ignore="UseAppTint" />
 
     <TextView
         android:layout_width="match_parent"
