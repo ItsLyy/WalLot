@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Gravity;
@@ -93,6 +94,8 @@ public class WalletDetailMember extends Fragment {
 
         addMemberBtn = view.findViewById(R.id.wallet_add_member_btn);
         listMember = view.findViewById(R.id.wallet_member_list);
+
+        listMember.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // TODO tampilkan data
         FirebaseDatabase database = FirebaseDatabase.getInstance();

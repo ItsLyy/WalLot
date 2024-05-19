@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:paddingVertical="5dp"
@@ -17,7 +18,9 @@
         android:padding="10dp"
         android:elevation="1dp"
         android:background="@drawable/debt_bg_icon"
-        android:src="@drawable/category_cash_icon"/>
+        android:tint="@color/white"
+        android:src="@drawable/category_cash_icon"
+        tools:ignore="UseAppTint" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,15 +46,21 @@
 
             <Spinner
                 android:id="@+id/role_member"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:textSize="20sp"/>
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:background="@drawable/bg_role_container"/>
 
             <ImageView
+                android:id="@+id/kickBtn"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/cancel_icon"
-                app:tint="@android:color/holo_red_dark"/>
+                android:tint="@android:color/holo_red_dark"
+                tools:ignore="UseAppTint"
+                android:padding="5dp"/>
 
         </LinearLayout>
 

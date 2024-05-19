@@ -25,6 +25,7 @@ import com.irlyreza.wallot.data.DataUserWalletModel;
 import com.irlyreza.wallot.data.DataWalletModel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.MyHolder> {
     ArrayList<DataUserWalletModel> model;
@@ -50,6 +51,10 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.My
         roleList.add("Moderator");
         roleList.add("Admin");
 
+        RoleSpinnerAdapter roleSpinnerAdapter = new RoleSpinnerAdapter(this.context, roleList);
+
+        holder.role.setAdapter(roleSpinnerAdapter);
+
         DataUserWalletModel dataUserWalletModel = this.model.get(position);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -60,12 +65,17 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.My
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 holder.name.setText(snapshot.child(dataUserWalletModel.getId_user()).child("nameUser").getValue(String.class));
                 holder.icon.setImageResource(snapshot.child(dataUserWalletModel.getId_user()).child("profileImage").getValue(Integer.class));
-                if (holder.role.getSelectedItem().toString().equals("Member")) {
+                if (Objects.equals(snapshot.child(dataUserWalletModel.getId_user()).child("role").getValue(String.class), "member")) {
                     holder.role.setVisibility(View.INVISIBLE);
-                } else if (holder.role.getSelectedItem().toString().equals("Moderator")) {
+                    holder.kickBtn.setVisibility(View.INVISIBLE);
+                } else if (Objects.equals(snapshot.child(dataUserWalletModel.getId_user()).child("role").getValue(String.class), "moderator")) {
                     holder.role.setVisibility(View.VISIBLE);
-                } else if (holder.role.getSelectedItem().toString().equals("member")) {
+                    holder.kickBtn.setVisibility(View.VISIBLE);
+                    holder.role.setSelection(1);
+                } else if (Objects.equals(snapshot.child(dataUserWalletModel.getId_user()).child("role").getValue(String.class), "admin")) {
+                    holder.kickBtn.setVisibility(View.VISIBLE);
                     holder.role.setVisibility(View.VISIBLE);
+                    holder.role.setSelection(2);
                 }
             }
 
@@ -83,13 +93,14 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.My
 
     class MyHolder extends RecyclerView.ViewHolder {
         TextView name;
-        ImageView icon;
+        ImageView icon, kickBtn;
         Spinner role;
 
         public MyHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name_member);
             icon = itemView.findViewById(R.id.icon_member);
+            kickBtn = itemView.findViewById(R.id.kickBtn);
             role = itemView.findViewById(R.id.role_member);
         }
     }

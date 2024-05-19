@@ -1,5 +1,6 @@
 package com.irlyreza.wallot.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,7 +22,7 @@ import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailTransaction;
 
 public class WalletDetail extends AppCompatActivity {
     TextView nameWallet, nominalWallet;
-    ImageView iconWallet, iconMember, iconTransaction, iconDebt;
+    ImageView iconWallet, iconMember, iconTransaction, iconDebt, walletEdit;
     RelativeLayout backgroundContainer;
 
     LinearLayout memberBtn, transactionBtn, debtBtn;
@@ -70,6 +71,8 @@ public class WalletDetail extends AppCompatActivity {
         iconTransaction = findViewById(R.id.transaction_icon);
         iconDebt = findViewById(R.id.debt_icon);
 
+        walletEdit = findViewById(R.id.edit_wallet);
+
         Bundle memberBundle = new Bundle();
         memberBundle.putString("idWallet", idWallet);
         WalletDetailMember walletDetailMember = new WalletDetailMember();
@@ -83,6 +86,14 @@ public class WalletDetail extends AppCompatActivity {
         memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left1_btn));
         iconMember.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
 
+        walletEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO pindah ke edit Wallet
+                Intent intent = new Intent();
+                startActivity(intent);
+            }
+        });
         memberBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
