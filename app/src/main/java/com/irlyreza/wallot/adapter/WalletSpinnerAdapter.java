@@ -32,8 +32,8 @@ public class WalletSpinnerAdapter extends ArrayAdapter<DataWalletModel> {
         TextView category = view.findViewById(R.id.spinner_wallet_name);
         ImageView icon = view.findViewById(R.id.spinner_wallet_icon);
 
-        category.setText(walletData.name);
-        icon.setImageResource(walletData.icon);
+        category.setText(walletData.getName());
+        icon.setImageResource(walletData.getIcon());
         icon.setBackground(ContextCompat.getDrawable(getContext(), walletData.getBgIcon()));
 
         return view;
@@ -50,8 +50,8 @@ public class WalletSpinnerAdapter extends ArrayAdapter<DataWalletModel> {
         TextView category = convertView.findViewById(R.id.spinner_wallet_name);
         ImageView icon = convertView.findViewById(R.id.spinner_wallet_icon);
 
-        category.setText(walletData.name);
-        icon.setImageResource(walletData.icon);
+        category.setText(walletData.getName());
+        icon.setImageResource(walletData.getIcon());
         icon.setBackground(ContextCompat.getDrawable(getContext(), walletData.getBgIcon()));
 
         return convertView;

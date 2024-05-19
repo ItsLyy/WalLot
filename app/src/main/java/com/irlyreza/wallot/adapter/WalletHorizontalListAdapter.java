@@ -46,11 +46,11 @@ public class WalletHorizontalListAdapter extends RecyclerView.Adapter<WalletHori
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragmentContext, WalletDetail.class);
-                intent.putExtra("idWallet", model.get(position).id_wallet);
-                intent.putExtra("name", model.get(position).name);
-                intent.putExtra("nominal", model.get(position).nominal);
-                intent.putExtra("icon", model.get(position).icon);
-                intent.putExtra("bgIcon", model.get(position).bgIcon);
+                intent.putExtra("idWallet", model.get(position).getId_wallet());
+                intent.putExtra("name", model.get(position).getName());
+                intent.putExtra("nominal", model.get(position).getNominal());
+                intent.putExtra("icon", model.get(position).getIcon());
+                intent.putExtra("bgIcon", model.get(position).getBgIcon());
 
                 fragmentContext.startActivity(intent);
             }

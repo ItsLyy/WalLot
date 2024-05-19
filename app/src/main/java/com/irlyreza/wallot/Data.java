@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import com.irlyreza.wallot.activity.MainActivity;
+
 import androidx.annotation.Nullable;
 
 public class Data extends SQLiteOpenHelper {

@@ -17,7 +17,7 @@ import com.irlyreza.wallot.R;
 import java.util.ArrayList;
 
 public class TransactionListAdapter extends ArrayAdapter<DataTransactionModel> {
-    TransactionListAdapter(Context context, ArrayList<DataTransactionModel> model) {
+    public TransactionListAdapter(Context context, ArrayList<DataTransactionModel> model) {
         super(context, R.layout.list_transaction_item, model);
     }
 
@@ -38,11 +38,10 @@ public class TransactionListAdapter extends ArrayAdapter<DataTransactionModel> {
         TextView category = view.findViewById(R.id.category_transaction_item);
         TextView date = view.findViewById(R.id.date_transaction_item);
         TextView money = view.findViewById(R.id.money_transaction_item);
-        ImageView icon = view.findViewById(R.id.icon_transaction_item);
 
-        category.setText(transactionData.description);
-        date.setText(transactionData.date);
-        money.setText(transactionData.nominal);
+        category.setText(transactionData.getDescription());
+        date.setText(transactionData.getDate());
+        money.setText(transactionData.getNominal());
 
         return view;
     }

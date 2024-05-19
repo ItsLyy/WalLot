@@ -35,7 +35,7 @@
                     android:text="Irly"
                     android:textColor="@color/dark_white"
                     android:gravity="top"
-                    android:id="@+id/total_money"
+                    android:id="@+id/username"
                     android:textSize="70sp"/>
 
             </LinearLayout>

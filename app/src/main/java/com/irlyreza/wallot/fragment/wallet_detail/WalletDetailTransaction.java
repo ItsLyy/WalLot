@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
 import com.irlyreza.wallot.activity.EditTransactionMenu;
 import com.irlyreza.wallot.adapter.TransactionListAdapter;
+import com.irlyreza.wallot.data.DataDebtModel;
 import com.irlyreza.wallot.data.DataTransactionModel;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class WalletDetailTransaction extends Fragment {
     ListView walletTransaction;
     TransactionListAdapter transactionListAdapter;
     ArrayList<DataTransactionModel> transactionArray;
-    ArrayList<WalLot_Data.Debt_Data> debtArray;
+    ArrayList<DataDebtModel> debtArray;
     String idWallet;
 
     public WalletDetailTransaction() {
@@ -134,9 +135,5 @@ public class WalletDetailTransaction extends Fragment {
             }
         });
         debtArray = new ArrayList<>();
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
-        debtArray.add(new WalLot_Data.Debt_Data("SJA", "20.000", "12-20-2022", R.drawable.category_cash_icon));
     }
 }

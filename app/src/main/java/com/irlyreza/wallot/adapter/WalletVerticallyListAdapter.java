@@ -39,20 +39,20 @@ public class WalletVerticallyListAdapter extends RecyclerView.Adapter<WalletVert
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.name.setText(this.model.get(position).name);
-        holder.money.setText(this.model.get(position).nominal);
-        holder.icon.setImageResource(this.model.get(position).icon);
+        holder.name.setText(this.model.get(position).getName());
+        holder.money.setText(this.model.get(position).getNominal());
+        holder.icon.setImageResource(this.model.get(position).getIcon());
         holder.icon.setBackground(ContextCompat.getDrawable(context, this.model.get(position).getBgIcon()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragmentContext, WalletDetail.class);
-                intent.putExtra("idWallet", model.get(position).id_wallet);
-                intent.putExtra("name", model.get(position).name);
-                intent.putExtra("nominal", model.get(position).nominal);
-                intent.putExtra("icon", model.get(position).icon);
-                intent.putExtra("bgIcon", model.get(position).bgIcon);
+                intent.putExtra("idWallet", model.get(position).getId_wallet());
+                intent.putExtra("name", model.get(position).getName());
+                intent.putExtra("nominal", model.get(position).getNominal());
+                intent.putExtra("icon", model.get(position).getIcon());
+                intent.putExtra("bgIcon", model.get(position).getBgIcon());
 
                 fragmentContext.startActivity(intent);
             }

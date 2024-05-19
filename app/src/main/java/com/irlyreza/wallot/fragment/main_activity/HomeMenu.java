@@ -1,6 +1,8 @@
 package com.irlyreza.wallot.fragment.main_activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,6 +51,8 @@ public class HomeMenu extends Fragment {
     ListView newestTransaction;
     RecyclerView horizontalWallet;
     RecyclerView horizontalDebt;
+    TextView username;
+    String idUser;
     LinearLayoutManager linearLayoutManager, linearLayoutManager1;
 
     TransactionListAdapter transactionListAdapter;
@@ -96,9 +101,17 @@ public class HomeMenu extends Fragment {
         newestTransaction = view.findViewById(R.id.newest_transaction);
         horizontalWallet = view.findViewById(R.id.horizontal_wallet_list);
         horizontalDebt = view.findViewById(R.id.horizontal_debt_list);
+        username = view.findViewById(R.id.username);
+
+        SharedPreferences preferences = getActivity().getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
+        idUser = preferences.getString("idUser", null);
+
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         horizontalWallet.setLayoutManager(linearLayoutManager);
         addData();
+
+
+
         debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity() ,getActivity().getApplicationContext(), debtArray);
         linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
@@ -122,8 +135,22 @@ public class HomeMenu extends Fragment {
 
     void addData() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userReference = database.getReference("users");
         DatabaseReference transactionReference = database.getReference("transactions");
         DatabaseReference walletReference = database.getReference("wallets");
+
+        userReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                DataSnapshot userItem = snapshot.child(idUser);
+                username.setText(userItem.child("nameUser").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         transactionReference.addValueEventListener(new ValueEventListener() {
             @Override

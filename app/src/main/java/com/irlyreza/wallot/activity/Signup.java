@@ -1,4 +1,4 @@
-package com.irlyreza.wallot;
+package com.irlyreza.wallot.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -8,14 +8,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.irlyreza.wallot.Data;
+import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.data.DataUserModel;
+
+import java.util.ArrayList;
+
 public class Signup extends AppCompatActivity {
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     EditText email,username,password,phonenumb;
     Button signup,back;
+    ArrayList<DataUserModel> userArray;
+    DataUserModel dataUserModel;
 
-    Data data;
+//    Data data;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -29,7 +44,7 @@ public class Signup extends AppCompatActivity {
         password = findViewById(R.id.password);
         signup = findViewById(R.id.btn_create);
         back = findViewById(R.id.btn_back);
-        data = new Data(getApplicationContext());
+//        data = new Data(getApplicationContext());
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,9 +55,17 @@ public class Signup extends AppCompatActivity {
                 }
 
                 else {
-                    data.insert_data(username.getText().toString(), password.getText().toString(), email.getText().toString(), phonenumb.getText().toString());
-                    Toast.makeText(getApplicationContext(), "Account has been created", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), Login.class));
+                    DatabaseReference userReference = database.getReference("users");
+                    dataUserModel = new DataUserModel(username.getText().toString(), password.getText().toString(), phonenumb.getText().toString(), email.getText().toString(), R.drawable.bn_profile_icon);
+                    String idUser = userReference.push().getKey();
+
+                    userReference.child(idUser).setValue(dataUserModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(getApplicationContext(), "Account has been created", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), Login.class));
+                        }
+                    });
                 }
 
             }

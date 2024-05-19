@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int selectedTab = 1;
 
-    @SuppressLint("WrongViewCast") ArrayList<WalLot_Data.Transaction_Data> data;
 
 
     @SuppressLint("MissingInflatedId")
