@@ -37,16 +37,23 @@ public class DebtVerticalListAdapter extends RecyclerView.Adapter<DebtVerticalLi
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
-//        holder.name.setText(this.model.get(position).name);
-//        holder.money.setText(this.model.get(position).money);
-//        holder.icon.setImageResource(this.model.get(position).icon);
+        DataDebtModel dataDebtModel = this.model.get(position);
+        holder.namePerson.setText(dataDebtModel.getNamePerson());
+        holder.nominal.setText(dataDebtModel.getNominal());
+        holder.phone_number.setText(dataDebtModel.getPhoneNumber());
+        holder.description.setText(dataDebtModel.getDescription());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragmentContext, EditDebtMenu.class);
-//                intent.putExtra("name", model.get(position).name);
-//                intent.putExtra("money", model.get(position).money);
-//                intent.putExtra("date", model.get(position).date);
+                intent.putExtra("idDebt", model.get(position).getId_debt());
+                intent.putExtra("nominal", model.get(position).getNominal());
+                intent.putExtra("name", model.get(position).getNamePerson());
+                intent.putExtra("phoneNumber", model.get(position).getPhoneNumber());
+                intent.putExtra("description", model.get(position).getDescription());
+                intent.putExtra("idWallet", model.get(position).getId_wallet());
+                intent.putExtra("date", model.get(position).getDate());
+                intent.putExtra("type", model.get(position).getType());
 
                 fragmentContext.startActivity(intent);
             }
@@ -59,14 +66,14 @@ public class DebtVerticalListAdapter extends RecyclerView.Adapter<DebtVerticalLi
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
-        TextView name, money;
-        ImageView icon;
+        TextView namePerson, nominal, description, phone_number;
 
         public MyHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.debt_name);
-            icon = itemView.findViewById(R.id.debt_icon);
-            money = itemView.findViewById(R.id.debt_nominal);
+            namePerson = itemView.findViewById(R.id.debt_name_person);
+            nominal = itemView.findViewById(R.id.debt_nominal);
+            description = itemView.findViewById(R.id.debt_description);
+            phone_number = itemView.findViewById(R.id.debt_number_phone);
         }
     }
 }

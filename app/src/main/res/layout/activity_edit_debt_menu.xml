@@ -62,64 +62,6 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/transaction_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="5dp"
-                        android:background="@drawable/transaction_input_field"
-                        android:drawableStart="@drawable/transaction_description_icon"
-                        android:drawablePadding="7dp"
-                        android:hint="Description"
-                        android:maxLength="50"
-                        android:minHeight="70dp"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="10dp"
-                        android:textSize="18sp"/>
-                    />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="9"
-                        android:text="0/50"
-                        android:id="@+id/transaction_description_length"/>
-
-                </LinearLayout>
-
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/transaction_input_field"
-                    android:minHeight="70dp"
-                    android:textSize="18sp"
-                    android:spinnerMode="dropdown"
-                    android:id="@+id/spinner_category"
-                    android:layout_marginVertical="5dp"/>
-
-                <Button
-                    android:id="@+id/datePickerTransaction"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="70dp"
-                    android:textSize="18sp"
-                    android:paddingHorizontal="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:drawableStart="@drawable/transaction_date_icon"
-                    android:drawablePadding="7dp"
-                    android:background="@drawable/transaction_input_field"
-                    android:text="00/00/0000"
-                    android:textAlignment="textStart"
-                    android:textStyle="normal"
-                    android:textColor="@color/light_grey"
-                    android:stateListAnimator="@null"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/transaction_input_field"
-                    android:orientation="horizontal">
-
-                    <EditText
                         android:id="@+id/debt_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -128,7 +70,7 @@
                         android:drawableStart="@drawable/debt_user_icon"
                         android:drawablePadding="7dp"
                         android:hint="Username"
-                        android:maxLength="50"
+                        android:maxLength="10"
                         android:minHeight="70dp"
                         android:layout_weight="1"
                         android:paddingHorizontal="10dp"
@@ -139,7 +81,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="9"
-                        android:text="0/50"
+                        android:text="0/10"
                         android:id="@+id/debt_username_length"/>
 
                 </LinearLayout>
@@ -168,14 +110,56 @@
                         android:textSize="18sp"/>
                     />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/transaction_input_field"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/transaction_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:background="@drawable/transaction_input_field"
+                        android:drawableStart="@drawable/transaction_description_icon"
+                        android:drawablePadding="7dp"
+                        android:hint="Description"
+                        android:maxLength="16"
+                        android:minHeight="70dp"
+                        android:layout_weight="1"
+                        android:paddingHorizontal="10dp"
+                        android:textSize="18sp"/>
+                    />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="9"
-                        android:text="0/50"
-                        android:id="@+id/debt_number_phone_length"/>
+                        android:text="0/16"
+                        android:id="@+id/transaction_description_length"/>
 
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/datePickerTransaction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="70dp"
+                    android:textSize="18sp"
+                    android:paddingHorizontal="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:drawableStart="@drawable/transaction_date_icon"
+                    android:drawablePadding="7dp"
+                    android:background="@drawable/transaction_input_field"
+                    android:text="00/00/0000"
+                    android:layout_marginVertical="5dp"
+                    android:textAlignment="textStart"
+                    android:textStyle="normal"
+                    android:textColor="@color/light_grey"
+                    android:stateListAnimator="@null"/>
 
             </LinearLayout>
 
@@ -193,19 +177,6 @@
                     android:paddingHorizontal="20dp"
                     android:layout_marginVertical="10dp">
 
-                    <ImageView
-                        android:id="@+id/delete_btn"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="6"
-                        android:layout_marginRight="3dp"
-                        android:padding="10dp"
-                        android:text="Delete"
-                        android:tint="@color/light_white"
-                        android:src="@drawable/delete_trasaction_icon"
-                        android:background="@drawable/transaction_add_btn"
-                        tools:ignore="UseAppTint" />
-
                     <Button
                         android:id="@+id/update_btn"
                         android:layout_width="match_parent"
@@ -221,12 +192,12 @@
                         android:id="@+id/done_btn"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="6"
+                        android:layout_weight="10"
                         android:layout_marginLeft="6dp"
                         android:padding="10dp"
                         android:text="Delete"
                         android:tint="@color/light_white"
-                        android:src="@drawable/delete_trasaction_icon"
+                        android:src="@drawable/check_icon"
                         android:background="@drawable/transaction_add_btn"
                         tools:ignore="UseAppTint" />
 

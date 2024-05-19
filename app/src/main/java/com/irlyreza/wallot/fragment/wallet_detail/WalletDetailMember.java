@@ -2,18 +2,32 @@ package com.irlyreza.wallot.fragment.wallet_detail;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.PopupWindow;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.adapter.MemberListAdapter;
+import com.irlyreza.wallot.data.DataUserWalletModel;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,8 +44,11 @@ public class WalletDetailMember extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    String idWallet, idUser;
+    RecyclerView listMember;
 
     Button addMemberBtn;
+    ArrayList<DataUserWalletModel> userWalletArray;
     public WalletDetailMember() {
         // Required empty public constructor
     }
@@ -70,9 +87,38 @@ public class WalletDetailMember extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wallet_detail_member, container, false);
         View viewWalletDetail = inflater.inflate(R.layout.activity_wallet_detail, container, false);
 
-
+        SharedPreferences preferences = getActivity().getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
+        idUser = preferences.getString("idUser", null);
+        idWallet = this.getArguments().getString("idWallet");
 
         addMemberBtn = view.findViewById(R.id.wallet_add_member_btn);
+        listMember = view.findViewById(R.id.wallet_member_list);
+
+        // TODO tampilkan data
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userWalletReference = database.getReference("user_wallets");
+
+        userWalletReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshotUserWallet) {
+                userWalletArray = new ArrayList<>();
+                for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
+
+                        DataUserWalletModel dataUserWalletModel = userWalletItem.getValue(DataUserWalletModel.class);
+                        dataUserWalletModel.setId_user_wallet(userWalletItem.getKey());
+                        userWalletArray.add(dataUserWalletModel);
+
+                }
+                MemberListAdapter memberListAdapter = new MemberListAdapter(getActivity(), getActivity().getApplicationContext(), userWalletArray);
+                listMember.setAdapter(memberListAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         addMemberBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +128,7 @@ public class WalletDetailMember extends Fragment {
 
                 int width = ViewGroup.LayoutParams.MATCH_PARENT;
                 int height = ViewGroup.LayoutParams.MATCH_PARENT;
+                EditText idFriend = popupSelector.findViewById(R.id.idFriend);
                 boolean focusable = true;
                 PopupWindow popupWindow = new PopupWindow(popupSelector, width, height, focusable);
                 view.findViewById(R.id.main).post(new Runnable() {
@@ -99,6 +146,13 @@ public class WalletDetailMember extends Fragment {
                 popupSelector.findViewById(R.id.add_btn).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference userWalletReference = database.getReference("user_wallets");
+                        DataUserWalletModel dataUserWalletModel = new DataUserWalletModel(idUser, idFriend.getText().toString(), "member");
+
+                        String idUserWallet = userWalletReference.push().getKey();
+                        userWalletReference.child(idUserWallet).setValue(dataUserWalletModel);
+
                         popupWindow.dismiss();
                     }
                 });

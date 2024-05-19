@@ -1,6 +1,7 @@
 package com.irlyreza.wallot.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,6 +28,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.data.DataUserWalletModel;
 import com.irlyreza.wallot.data.DataWalletModel;
 
 public class AddWalletMenu extends AppCompatActivity {
@@ -46,6 +48,9 @@ public class AddWalletMenu extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        SharedPreferences sharedPreferences = getSharedPreferences("LOGINAPP", MODE_PRIVATE);
+
         nameWallet = findViewById(R.id.name_wallet);
         nameWalletLength = findViewById(R.id.name_wallet_length);
 
@@ -213,11 +218,15 @@ public class AddWalletMenu extends AppCompatActivity {
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference walletReference = database.getReference("wallets");
+                DatabaseReference userWalletReference = database.getReference("user_wallets");
 
                 String id_wallet = walletReference.push().getKey();
+                String id_user_wallet = userWalletReference.push().getKey();
                 walletReference.child(id_wallet).setValue(dataWalletModel).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        DataUserWalletModel dataUserWalletModel = new DataUserWalletModel(sharedPreferences.getString("idUser", ""), id_wallet, "admin");
+                        userWalletReference.child(id_user_wallet).setValue(dataUserWalletModel);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                     }

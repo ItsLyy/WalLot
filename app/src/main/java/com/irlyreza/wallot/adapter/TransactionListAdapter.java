@@ -26,6 +26,12 @@ public class TransactionListAdapter extends ArrayAdapter<DataTransactionModel> {
         return super.getItemId(position);
     }
 
+    @Nullable
+    @Override
+    public DataTransactionModel getItem(int position) {
+        return super.getItem(getCount() - position - 1);
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {

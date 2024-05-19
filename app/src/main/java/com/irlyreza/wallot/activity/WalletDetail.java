@@ -70,9 +70,14 @@ public class WalletDetail extends AppCompatActivity {
         iconTransaction = findViewById(R.id.transaction_icon);
         iconDebt = findViewById(R.id.debt_icon);
 
+        Bundle memberBundle = new Bundle();
+        memberBundle.putString("idWallet", idWallet);
+        WalletDetailMember walletDetailMember = new WalletDetailMember();
+        walletDetailMember.setArguments(memberBundle);
+
         getSupportFragmentManager().beginTransaction().
                 setReorderingAllowed(true).
-                replace(R.id.fragment_wallet_detail_container, WalletDetailMember.class, null).
+                replace(R.id.fragment_wallet_detail_container, walletDetailMember).
                 commit();
 
         memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left1_btn));
@@ -81,6 +86,11 @@ public class WalletDetail extends AppCompatActivity {
         memberBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle memberBundle = new Bundle();
+                memberBundle.putString("idWallet", idWallet);
+                WalletDetailMember walletDetailMember = new WalletDetailMember();
+                walletDetailMember.setArguments(memberBundle);
+
                 memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left1_btn));
                 iconMember.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
 
@@ -92,7 +102,7 @@ public class WalletDetail extends AppCompatActivity {
 
                 getSupportFragmentManager().beginTransaction().
                         setReorderingAllowed(true).
-                        replace(R.id.fragment_wallet_detail_container, WalletDetailMember.class, null).
+                        replace(R.id.fragment_wallet_detail_container, walletDetailMember).
                         commit();
             }
         });
@@ -124,9 +134,14 @@ public class WalletDetail extends AppCompatActivity {
         debtBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle debtBundle = new Bundle();
+                debtBundle.putString("idWallet", idWallet);
+                WalletDetailDebt walletDetailTransaction = new WalletDetailDebt();
+                walletDetailTransaction.setArguments(debtBundle);
+
                 getSupportFragmentManager().beginTransaction().
                         setReorderingAllowed(true).
-                        replace(R.id.fragment_wallet_detail_container, WalletDetailDebt.class, null).
+                        replace(R.id.fragment_wallet_detail_container, walletDetailTransaction).
                         commit();
 
                 memberBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_left_btn));

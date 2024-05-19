@@ -92,9 +92,11 @@ public class WalletDetailTransaction extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), EditTransactionMenu.class);
-//                intent.putExtra("nominal", transactionArray.get(i).money);
-//                intent.putExtra("description", transactionArray.get(i).category);
-//                intent.putExtra("date", transactionArray.get(i).date);
+                intent.putExtra("id_transaction", transactionArray.get(adapterView.getCount() - i - 1).getId_transaction());
+                intent.putExtra("nominal", transactionArray.get(adapterView.getCount() - i - 1).getNominal());
+                intent.putExtra("description", transactionArray.get(adapterView.getCount() - i - 1).getDescription());
+                intent.putExtra("id_wallet", transactionArray.get(adapterView.getCount() - i - 1).getId_wallet());
+                intent.putExtra("date", transactionArray.get(adapterView.getCount() - i - 1).getDate());
                 startActivity(intent);
             }
         });

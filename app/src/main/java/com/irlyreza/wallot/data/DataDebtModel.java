@@ -3,10 +3,9 @@ package com.irlyreza.wallot.data;
 public class DataDebtModel {
     String id_debt, namePerson, nominal, description, phoneNumber, date, id_wallet, id_user, type;
 
-    DataDebtModel() {}
+    public DataDebtModel() {}
 
-    public DataDebtModel(String id_debt, String name_person, String nominal, String description, String phoneNumber, String date, String id_wallet, String id_user, String type) {
-        this.id_debt = id_debt;
+    public DataDebtModel(String name_person, String nominal, String description, String phoneNumber, String date, String id_wallet, String id_user, String type) {
         this.namePerson = name_person;
         this.nominal = nominal;
         this.description = description;

@@ -2,6 +2,7 @@ package com.irlyreza.wallot.fragment.wallet_detail;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
 import com.irlyreza.wallot.adapter.DebtVerticalListAdapter;
 import com.irlyreza.wallot.data.DataDebtModel;
@@ -34,6 +40,7 @@ public class WalletDetailDebt extends Fragment {
     ArrayList<DataDebtModel> debtArray;
     DebtVerticalListAdapter debtVerticalListAdapter;
     RecyclerView debtVerticalList;
+    String idWallet;
 
     public WalletDetailDebt() {
         // Required empty public constructor
@@ -73,14 +80,38 @@ public class WalletDetailDebt extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wallet_detail_debt, container, false);
         debtVerticalList = view.findViewById(R.id.debt_vertical_list);
         addData();
-        debtVerticalListAdapter = new DebtVerticalListAdapter(getActivity(), getActivity().getApplicationContext(), debtArray);
         debtVerticalList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        debtVerticalList.setAdapter(debtVerticalListAdapter);
+
 
         return view;
     }
     void addData() {
-        debtArray = new ArrayList<>();
+        idWallet = this.getArguments().getString("idWallet");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference debtReference = database.getReference("debts");
 
+        debtReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                debtArray = new ArrayList<>();
+
+                for (DataSnapshot debtItem : snapshot.getChildren()) {
+                    if (debtItem.child("id_wallet").getValue(String.class).equals(idWallet)) {
+                        DataDebtModel dataDebtModel = debtItem.getValue(DataDebtModel.class);
+                        dataDebtModel.setId_debt(debtItem.getKey());
+                        debtArray.add(dataDebtModel);
+                    }
+                }
+                if (!getActivity().equals(null)) {
+                    debtVerticalListAdapter = new DebtVerticalListAdapter(getActivity(), getActivity().getApplicationContext(), debtArray);
+                    debtVerticalList.setAdapter(debtVerticalListAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

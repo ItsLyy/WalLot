@@ -86,16 +86,6 @@
 
                 </LinearLayout>
 
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/transaction_input_field"
-                    android:minHeight="70dp"
-                    android:textSize="18sp"
-                    android:spinnerMode="dropdown"
-                    android:id="@+id/spinner_category"
-                    android:layout_marginVertical="5dp"/>
-
                 <Button
                     android:id="@+id/datePickerTransaction"
                     android:layout_width="match_parent"

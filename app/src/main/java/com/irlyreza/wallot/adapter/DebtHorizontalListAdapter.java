@@ -41,14 +41,18 @@ public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizont
         holder.namePerson.setText(dataDebtModel.getNamePerson());
         holder.nominal.setText(dataDebtModel.getNominal());
         holder.phone_number.setText(dataDebtModel.getPhoneNumber());
-        holder.description.setText(dataDebtModel.getDescription());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(fragmentContext, EditDebtMenu.class);
-//                intent.putExtra("name", model.get(position).name);
-//                intent.putExtra("money", model.get(position).money);
-//                intent.putExtra("date", model.get(position).date);
+                intent.putExtra("idDebt", model.get(position).getId_debt());
+                intent.putExtra("nominal", model.get(position).getNominal());
+                intent.putExtra("name", model.get(position).getNamePerson());
+                intent.putExtra("phoneNumber", model.get(position).getPhoneNumber());
+                intent.putExtra("description", model.get(position).getDescription());
+                intent.putExtra("idWallet", model.get(position).getId_wallet());
+                intent.putExtra("date", model.get(position).getDate());
+                intent.putExtra("type", model.get(position).getType());
 
                 fragmentContext.startActivity(intent);
             }
@@ -61,15 +65,12 @@ public class DebtHorizontalListAdapter extends RecyclerView.Adapter<DebtHorizont
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
-        TextView namePerson, nominal, description, phone_number;
-        ImageView icon;
+        TextView namePerson, nominal, phone_number;
 
         public MyHolder(View itemView) {
             super(itemView);
             namePerson = itemView.findViewById(R.id.debt_name_person);
-            icon = itemView.findViewById(R.id.debt_icon);
             nominal = itemView.findViewById(R.id.debt_nominal);
-            description = itemView.findViewById(R.id.debt_description);
             phone_number = itemView.findViewById(R.id.debt_number_phone);
         }
     }

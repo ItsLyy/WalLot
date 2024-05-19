@@ -1,7 +1,9 @@
 package com.irlyreza.wallot.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
 import com.irlyreza.wallot.adapter.WalletSpinnerAdapter;
+import com.irlyreza.wallot.data.DataDebtModel;
 import com.irlyreza.wallot.data.DataWalletModel;
 
 import java.text.NumberFormat;
@@ -39,15 +42,17 @@ import java.util.Locale;
 
 public class DebtMenu extends AppCompatActivity {
     Button datePickerTransaction, saveTransaction, giverBtn, recieverBtn;
-    EditText transactionNominal, transactionDescription;
-    TextView transactionDescriptionLength;
+    EditText transactionNominal, transactionDescription, debtUsername, phoneNumber;
+    TextView transactionDescriptionLength, debtUsernameLength;
     Spinner spinnerCategory;
     ArrayList<DataWalletModel> categoryList;
+    ArrayList<DataDebtModel> debtArray;
+    DataDebtModel dataDebtModel;
     WalletSpinnerAdapter walletSpinnerAdapter;
     int years, months, days;
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
-    String category;
+    String category, type = "giver", idUser;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -57,6 +62,10 @@ public class DebtMenu extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        SharedPreferences preferences = getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
+        idUser = preferences.getString("idUser", null);
+
         datePickerTransaction = findViewById(R.id.datePickerTransaction);
         saveTransaction = findViewById(R.id.save_transaction);
         spinnerCategory = findViewById(R.id.spinner_category);
@@ -65,6 +74,9 @@ public class DebtMenu extends AppCompatActivity {
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
+        debtUsername = findViewById(R.id.debt_username);
+        debtUsernameLength = findViewById(R.id.debt_username_length);
+        phoneNumber = findViewById(R.id.debt_number_phone);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String currentDateandTime = sdf.format(new Date());
@@ -103,15 +115,32 @@ public class DebtMenu extends AppCompatActivity {
             }
         });
 
-        transactionDescription.addTextChangedListener(new TextWatcher() {
+        debtUsername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                debtUsernameLength.setText(debtUsername.length() + "/10");
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                transactionDescriptionLength.setText(transactionDescription.length() + "/50");
+                debtUsernameLength.setText(debtUsername.length() + "/10");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        transactionDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                transactionDescriptionLength.setText(transactionDescription.length() + "/16");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                transactionDescriptionLength.setText(transactionDescription.length() + "/16");
             }
 
             @Override
@@ -127,6 +156,7 @@ public class DebtMenu extends AppCompatActivity {
                 giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
                 recieverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
                 recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                type = "giver";
             }
         });
 
@@ -137,6 +167,7 @@ public class DebtMenu extends AppCompatActivity {
                 recieverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
                 giverBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
                 giverBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                type = "receiver";
             }
         });
 
@@ -166,13 +197,15 @@ public class DebtMenu extends AppCompatActivity {
 
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                category = parent.getItemAtPosition(position).toString();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                DataWalletModel dataWalletModel = (DataWalletModel) adapterView.getItemAtPosition(i);
+                category = dataWalletModel.getId_wallet();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                category = parent.getItemAtPosition(0).toString();
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                DataWalletModel dataWalletModel = (DataWalletModel) adapterView.getItemAtPosition(0);
+                category = dataWalletModel.getId_wallet();
             }
         });
 
@@ -205,6 +238,14 @@ public class DebtMenu extends AppCompatActivity {
         saveTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference debtReference = database.getReference("debts");
+
+                dataDebtModel = new DataDebtModel(debtUsername.getText().toString(), transactionNominal.getText().toString(), transactionDescription.getText().toString(), phoneNumber.getText().toString(), datePickerTransaction.getText().toString(), category, idUser, type);
+                String idDebt = debtReference.push().getKey();
+
+                debtReference.child(idDebt).setValue(dataDebtModel);
+
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
@@ -218,6 +259,5 @@ public class DebtMenu extends AppCompatActivity {
         String[] split = formatrupiah.split(",");
         int length = split[0].length();
         return  split[0].substring(2,length);
-
     }
 }

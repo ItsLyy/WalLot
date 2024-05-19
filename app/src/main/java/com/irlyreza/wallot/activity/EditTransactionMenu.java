@@ -15,13 +15,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.data.DataTransactionModel;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -35,7 +44,6 @@ public class EditTransactionMenu extends AppCompatActivity {
     ImageView deleteBtn;
     EditText transactionNominal, transactionDescription;
     TextView transactionDescriptionLength;
-    Spinner spinnerCategory;
     int years, months, days;
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
@@ -56,19 +64,14 @@ public class EditTransactionMenu extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
 
         datePickerTransaction = findViewById(R.id.datePickerTransaction);
-        spinnerCategory = findViewById(R.id.spinner_category);
         updateBtn = findViewById(R.id.update_btn);
         deleteBtn = findViewById(R.id.delete_btn);
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String currentDateandTime = sdf.format(new Date());
-        datePickerTransaction.setText(currentDateandTime);
-
-        transactionNominal.setText(bundle.getString("nominal"));
         transactionDescription.setText(bundle.getString("description"));
+        transactionNominal.setText(bundle.getString("nominal"));
         datePickerTransaction.setText(bundle.getString("date"));
 
 
@@ -137,21 +140,6 @@ public class EditTransactionMenu extends AppCompatActivity {
             }
         });
 
-        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                category = parent.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                category = parent.getItemAtPosition(0).toString();
-            }
-        });
-
-
-
-
         datePickerTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +163,38 @@ public class EditTransactionMenu extends AppCompatActivity {
             }
         });
 
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference transactionReference = database.getReference("transactions");
+                DataTransactionModel dataTransactionModel = new DataTransactionModel(transactionNominal.getText().toString(), transactionDescription.getText().toString(), datePickerTransaction.getText().toString(), bundle.getString("id_wallet"));
+
+                transactionReference.child(bundle.getString("id_transaction")).setValue(dataTransactionModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference transactionReference = database.getReference("transactions");
+
+                transactionReference.child(bundle.getString("id_transaction")).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
     }
 
     private String formatRupiah(Double number) {
