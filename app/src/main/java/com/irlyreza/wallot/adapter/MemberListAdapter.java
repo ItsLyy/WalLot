@@ -36,6 +36,8 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.My
     ArrayList<RoleListData> roleList = new ArrayList<>();
     Context context, fragmentContext;
     String idUser;
+    boolean firstTime = true;
+
 
     public MemberListAdapter(Context fragmentContext, Context context, ArrayList<DataUserWalletModel> model, String idUser) {
         this.context = context;
@@ -84,7 +86,6 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.My
                 holder.name.setText(snapshot.child(dataUserWalletModel.getId_user()).child("nameUser").getValue(String.class));
                 holder.icon.setImageResource(snapshot.child(dataUserWalletModel.getId_user()).child("profileImage").getValue(Integer.class));
                 if (dataUserWalletModel.getRole().equals("member")) {
-                    holder.kickBtn.setVisibility(View.VISIBLE);
                     holder.role.setVisibility(View.VISIBLE);
                     holder.role.setSelection(0);
                 } else if (dataUserWalletModel.getRole().equals("moderator")) {
@@ -107,10 +108,21 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.My
         holder.role.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                RoleListData roleListData = (RoleListData) adapterView.getItemAtPosition(i);
-                if (roleListData.getRole().toString().equals("Member")) {
-                } else if (roleListData.getRole().toString().equals("Moderator")) {
-                } else if (roleListData.getRole().toString().equals("Admin")) {
+                if(firstTime) {
+                    firstTime = false;
+                } else {
+                    RoleListData roleListData = (RoleListData) adapterView.getItemAtPosition(i);
+                    if (roleListData.getRole().toString().equals("Member")) {
+                        userWalletReference.child(dataUserWalletModel.getId_user_wallet()).child("role").setValue("member");
+                        holder.role.setSelection(0);
+                    } else if (roleListData.getRole().toString().equals("Moderator")) {
+                        userWalletReference.child(dataUserWalletModel.getId_user_wallet()).child("role").setValue("moderator");
+                        holder.role.setSelection(1);
+                    } else if (roleListData.getRole().toString().equals("Admin")) {
+                        holder.role.setSelection(2);
+                        userWalletReference.child(dataUserWalletModel.getId_user_wallet()).child("role").setValue("admin");
+                    }
+
                 }
             }
 

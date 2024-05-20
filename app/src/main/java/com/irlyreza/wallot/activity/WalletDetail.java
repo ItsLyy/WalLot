@@ -13,11 +13,14 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,8 +36,8 @@ import java.util.Objects;
 
 public class WalletDetail extends AppCompatActivity {
     TextView nameWallet, nominalWallet;
-    ImageView iconWallet, iconMember, iconTransaction, iconDebt, walletEdit;
-    RelativeLayout backgroundContainer;
+    ImageView iconWallet, iconMember, iconTransaction, iconDebt, walletEdit, walletLeave;
+    ConstraintLayout backgroundContainer;
 
     LinearLayout memberBtn, transactionBtn, debtBtn;
 
@@ -55,6 +58,7 @@ public class WalletDetail extends AppCompatActivity {
         nominalWallet = findViewById(R.id.wallet_nominal);
         iconWallet = findViewById(R.id.wallet_icon);
         backgroundContainer = findViewById(R.id.background_container);
+        walletLeave = findViewById(R.id.leave_wallet);
 
         Bundle bundle = getIntent().getExtras();
         nameWallet.setText(bundle.getString("name"));
@@ -195,6 +199,20 @@ public class WalletDetail extends AppCompatActivity {
                 for (DataSnapshot userWalletItem : snapshot.getChildren()) {
                     if (Objects.equals(userWalletItem.child("role").getValue(String.class), "member") && Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser)) {
                         walletEdit.setVisibility(View.GONE);
+                        walletLeave.setVisibility(View.VISIBLE);
+                        walletLeave.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (userWalletItem.child("id_user").getValue(String.class).equals(idUser) && userWalletItem.child("id_wallet").getValue(String.class).equals(idWallet)) {
+                                   userWalletReferencer.child(userWalletItem.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                       @Override
+                                       public void onComplete(@NonNull Task<Void> task) {
+                                           startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                       }
+                                   });
+                                }
+                            }
+                        });
                     } else if (Objects.equals(userWalletItem.child("role").getValue(String.class), "moderator") && Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser)) {
                         walletEdit.setVisibility(View.VISIBLE);
                     } else if (Objects.equals(userWalletItem.child("role").getValue(String.class), "admin") && Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser)) {

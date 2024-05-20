@@ -208,7 +208,7 @@ public class HomeMenu extends Fragment {
                                     walletArray.add(dataWalletModel);
                                     break;
                                 }
-                                horizontalWallet.setVisibility(View.VISIBLE);
+                                horizontalWallet.setVisibility(View.GONE);
                             }
                         }
                         if(getActivity() != null) {
