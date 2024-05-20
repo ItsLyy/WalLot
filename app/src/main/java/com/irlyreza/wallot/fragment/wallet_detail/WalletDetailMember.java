@@ -102,6 +102,7 @@ public class WalletDetailMember extends Fragment {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userWalletReference = database.getReference("user_wallets");
 
+
         userWalletReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshotUserWallet) {
@@ -114,7 +115,7 @@ public class WalletDetailMember extends Fragment {
                     }
                 }
                 if (getActivity() != null) {
-                    MemberListAdapter memberListAdapter = new MemberListAdapter(getActivity(), getActivity().getApplicationContext(), userWalletArray);
+                    MemberListAdapter memberListAdapter = new MemberListAdapter(getActivity(), getActivity().getApplicationContext(), userWalletArray, idUser);
                     listMember.setAdapter(memberListAdapter);
                 }
             }
@@ -124,7 +125,6 @@ public class WalletDetailMember extends Fragment {
 
             }
         });
-
 
         addMemberBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +154,7 @@ public class WalletDetailMember extends Fragment {
                     public void onClick(View view) {
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference userWalletReference = database.getReference("user_wallets");
-                        DataUserWalletModel dataUserWalletModel = new DataUserWalletModel(idUser, idFriend.getText().toString(), "member");
+                        DataUserWalletModel dataUserWalletModel = new DataUserWalletModel(idFriend.getText().toString(), idWallet, "member");
 
                         String idUserWallet = userWalletReference.push().getKey();
                         userWalletReference.child(idUserWallet).setValue(dataUserWalletModel);

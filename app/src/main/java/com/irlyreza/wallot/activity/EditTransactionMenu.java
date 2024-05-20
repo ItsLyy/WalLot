@@ -1,7 +1,9 @@
 package com.irlyreza.wallot.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,7 +49,8 @@ public class EditTransactionMenu extends AppCompatActivity {
     int years, months, days;
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
-    String category;
+    String type;
+    private String idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,9 @@ public class EditTransactionMenu extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
+        SharedPreferences preferences = getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
+        idUser = preferences.getString("idUser", null);
+
         datePickerTransaction = findViewById(R.id.datePickerTransaction);
         updateBtn = findViewById(R.id.update_btn);
         deleteBtn = findViewById(R.id.delete_btn);
@@ -73,6 +79,7 @@ public class EditTransactionMenu extends AppCompatActivity {
         transactionDescription.setText(bundle.getString("description"));
         transactionNominal.setText(bundle.getString("nominal"));
         datePickerTransaction.setText(bundle.getString("date"));
+        type = bundle.getString("type");
 
 
         updateBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
@@ -168,7 +175,7 @@ public class EditTransactionMenu extends AppCompatActivity {
             public void onClick(View view) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference transactionReference = database.getReference("transactions");
-                DataTransactionModel dataTransactionModel = new DataTransactionModel(transactionNominal.getText().toString(), transactionDescription.getText().toString(), datePickerTransaction.getText().toString(), bundle.getString("id_wallet"));
+                DataTransactionModel dataTransactionModel = new DataTransactionModel(transactionNominal.getText().toString(), transactionDescription.getText().toString(), datePickerTransaction.getText().toString(), bundle.getString("id_wallet"), idUser, type);
 
                 transactionReference.child(bundle.getString("id_transaction")).setValue(dataTransactionModel).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

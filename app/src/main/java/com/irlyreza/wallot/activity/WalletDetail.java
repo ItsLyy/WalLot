@@ -1,6 +1,8 @@
 package com.irlyreza.wallot.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,17 +11,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
 import com.irlyreza.wallot.databinding.ActivityEditWalletMenuBinding;
 import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailDebt;
 import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailMember;
 import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailTransaction;
+
+import java.util.Objects;
 
 public class WalletDetail extends AppCompatActivity {
     TextView nameWallet, nominalWallet;
@@ -29,6 +39,8 @@ public class WalletDetail extends AppCompatActivity {
     LinearLayout memberBtn, transactionBtn, debtBtn;
 
     String idWallet;
+    private String idUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +61,9 @@ public class WalletDetail extends AppCompatActivity {
         nominalWallet.setText(bundle.getString("nominal"));
         iconWallet.setImageResource(bundle.getInt("icon"));
         idWallet = bundle.getString("idWallet");
+
+        SharedPreferences preferences = getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
+        idUser = preferences.getString("idUser", null);
 
         if(bundle.getInt("bgIcon") == R.drawable.bg_corner_gradient_blue) {
             backgroundContainer.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_gradient_blue));
@@ -90,7 +105,6 @@ public class WalletDetail extends AppCompatActivity {
         walletEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO pindah ke edit Wallet
                 Intent intent = new Intent(getApplicationContext(), EditWalletMenu.class);
                 intent.putExtra("idWallet", idWallet);
                 intent.putExtra("name", bundle.getString("name"));
@@ -169,6 +183,29 @@ public class WalletDetail extends AppCompatActivity {
 
                 debtBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.wallet_tab_background_right1_btn));
                 iconDebt.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
+            }
+        });
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userWalletReferencer = database.getReference("user_wallets");
+
+        userWalletReferencer.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot userWalletItem : snapshot.getChildren()) {
+                    if (Objects.equals(userWalletItem.child("role").getValue(String.class), "member") && Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser)) {
+                        walletEdit.setVisibility(View.GONE);
+                    } else if (Objects.equals(userWalletItem.child("role").getValue(String.class), "moderator") && Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser)) {
+                        walletEdit.setVisibility(View.VISIBLE);
+                    } else if (Objects.equals(userWalletItem.child("role").getValue(String.class), "admin") && Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser)) {
+                        walletEdit.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

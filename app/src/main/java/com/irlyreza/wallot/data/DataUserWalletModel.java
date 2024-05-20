@@ -2,6 +2,7 @@ package com.irlyreza.wallot.data;
 
 public class DataUserWalletModel {
     String id_user_wallet, id_user, id_wallet, role;
+    Boolean displayBalance;
 
     DataUserWalletModel() {}
 
@@ -9,6 +10,21 @@ public class DataUserWalletModel {
         this.id_user = id_user;
         this.id_wallet = id_wallet;
         this.role = role;
+    }
+
+    public DataUserWalletModel(String id_user, String id_wallet, String role, Boolean displayBalance) {
+        this.id_user = id_user;
+        this.id_wallet = id_wallet;
+        this.role = role;
+        this.displayBalance = displayBalance;
+    }
+
+    public Boolean getDisplayBalance() {
+        return displayBalance;
+    }
+
+    public void setDisplayBalance(Boolean displayBalance) {
+        this.displayBalance = displayBalance;
     }
 
     public String getRole() {

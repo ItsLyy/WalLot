@@ -1,6 +1,8 @@
 package com.irlyreza.wallot.fragment.main_activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,10 +22,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
 import com.irlyreza.wallot.activity.AddWalletMenu;
+import com.irlyreza.wallot.adapter.WalletHorizontalListAdapter;
 import com.irlyreza.wallot.adapter.WalletVerticallyListAdapter;
 import com.irlyreza.wallot.data.DataWalletModel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +49,7 @@ public class WalletMenu extends Fragment {
     RecyclerView walletList;
     ArrayList<DataWalletModel> walletData;
     LinearLayout walletAddBtn;
+    private String idUser;
 
 
     public WalletMenu() {
@@ -84,6 +89,10 @@ public class WalletMenu extends Fragment {
         View view = inflater.inflate(R.layout.fragment_wallet_menu, container, false);
         walletList = view.findViewById(R.id.vertical_wallet_list);
         walletAddBtn = view.findViewById(R.id.add_wallet);
+
+        SharedPreferences preferences = getActivity().getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
+        idUser = preferences.getString("idUser", null);
+
         addData();
         walletList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -102,19 +111,35 @@ public class WalletMenu extends Fragment {
     void addData() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference walletReference = database.getReference("wallets");
-        walletReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference userWalletReference = database.getReference("user_wallets");
+        userWalletReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                walletData = new ArrayList<>();
-                for (DataSnapshot walletItem : snapshot.getChildren()) {
-                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
-                    dataWalletModel.setId_wallet(walletItem.getKey());
-                    walletData.add(dataWalletModel);
-                }
-                if(getActivity() != null) {
-                    walletVerticallyListAdapter = new WalletVerticallyListAdapter(getActivity(), getActivity().getApplicationContext(), walletData);
-                    walletList.setAdapter(walletVerticallyListAdapter);
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshotUserWallet) {
+                walletReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshotWallet) {
+                        walletData = new ArrayList<>();
+                        for (DataSnapshot walletItem : snapshotWallet.getChildren()) {
+                            for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
+                                if (Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser) && Objects.equals(userWalletItem.child("id_wallet").getValue(String.class), walletItem.getKey())) {
+                                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
+                                    dataWalletModel.setId_wallet(walletItem.getKey());
+                                    walletData.add(dataWalletModel);
+                                }
+                            }
+                            if(getActivity() != null) {
+                                walletVerticallyListAdapter = new WalletVerticallyListAdapter(getActivity(), getActivity().getApplicationContext(), walletData);
+                            }
+                            walletList.setAdapter(walletVerticallyListAdapter);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
 
             @Override

@@ -174,13 +174,27 @@
                     android:layout_height="370dp"
                     android:scrollbars="none"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginHorizontal="15dp"
-                    android:layout_marginVertical="5dp"
-                    android:text="Wallet" />
+                    android:layout_marginVertical="5dp">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Wallet"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/add_wallet_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Add New Wallet"
+                        android:textColor="@color/cyan"/>
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"

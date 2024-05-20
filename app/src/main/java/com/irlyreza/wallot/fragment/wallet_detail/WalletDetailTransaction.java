@@ -97,6 +97,7 @@ public class WalletDetailTransaction extends Fragment {
                 intent.putExtra("description", transactionArray.get(adapterView.getCount() - i - 1).getDescription());
                 intent.putExtra("id_wallet", transactionArray.get(adapterView.getCount() - i - 1).getId_wallet());
                 intent.putExtra("date", transactionArray.get(adapterView.getCount() - i - 1).getDate());
+                intent.putExtra("type", transactionArray.get(adapterView.getCount() - i - 1).getType());
                 startActivity(intent);
             }
         });

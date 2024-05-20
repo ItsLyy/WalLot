@@ -1,7 +1,9 @@
 package com.irlyreza.wallot.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,11 +41,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class TransactionMenu extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference transactionReference = database.getReference("transactions");
     DatabaseReference walletReference = database.getReference("wallets");
+    DatabaseReference userWalletReference = database.getReference("user_wallets");
 
 
     Button datePickerTransaction, saveTransaction, incomeBtn, outcomeBtn;
@@ -57,6 +61,7 @@ public class TransactionMenu extends AppCompatActivity {
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
     String category, idWallet;
+    private String idUser, type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,9 @@ public class TransactionMenu extends AppCompatActivity {
         transactionNominal = findViewById(R.id.transaction_nominal);
         transactionDescription = findViewById(R.id.transaction_description);
         transactionDescriptionLength = findViewById(R.id.transaction_description_length);
+
+        SharedPreferences preferences = getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
+        idUser = preferences.getString("idUser", null);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String currentDateandTime = sdf.format(new Date());
@@ -139,6 +147,7 @@ public class TransactionMenu extends AppCompatActivity {
                 incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_true_btn));
                 outcomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
                 outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                type= "income";
             }
         });
 
@@ -149,6 +158,7 @@ public class TransactionMenu extends AppCompatActivity {
                 outcomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_white));
                 incomeBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.transaction_selected_false_btn));
                 incomeBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                type= "outcome";
             }
         });
 
@@ -164,19 +174,35 @@ public class TransactionMenu extends AppCompatActivity {
             }
         });
 
-        walletReference.addValueEventListener(new ValueEventListener() {
+        userWalletReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                categoryList = new ArrayList<>();
-                for (DataSnapshot walletItem : snapshot.getChildren()) {
-                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
-                    dataWalletModel.setId_wallet(walletItem.getKey());
-                    categoryList.add(dataWalletModel);
-                }
-                if(getApplicationContext() != null) {
-                    walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
-                }
-                spinnerCategory.setAdapter(walletSpinnerAdapter);
+            public void onDataChange(@NonNull DataSnapshot snapshotUserWallet) {
+                walletReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshotWallet) {
+                        categoryList = new ArrayList<>();
+                        for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
+                            for (DataSnapshot walletItem : snapshotWallet.getChildren()) {
+                                if (Objects.equals(userWalletItem.child("id_wallet").getValue(String.class), walletItem.getKey()) &&
+                                        Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser) &&
+                                        roleAccessEdit(Objects.requireNonNull(userWalletItem.child("role").getValue(String.class)))) {
+                                    DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
+                                    dataWalletModel.setId_wallet(walletItem.getKey());
+                                    categoryList.add(dataWalletModel);
+                                }
+                            }
+                            if(getApplicationContext() != null) {
+                                walletSpinnerAdapter = new WalletSpinnerAdapter(getApplicationContext(), categoryList);
+                            }
+                            spinnerCategory.setAdapter(walletSpinnerAdapter);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -184,7 +210,6 @@ public class TransactionMenu extends AppCompatActivity {
 
             }
         });
-
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -241,7 +266,7 @@ public class TransactionMenu extends AppCompatActivity {
     }
 
     private void saveData(String nominal, String description, String date) {
-        DataTransactionModel dataTransactionModel = new DataTransactionModel(nominal, description, date, idWallet);
+        DataTransactionModel dataTransactionModel = new DataTransactionModel(nominal, description, date, idWallet, idUser, type);
         String id_transaction = transactionReference.push().getKey();
         transactionReference.child(id_transaction).setValue(dataTransactionModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -250,5 +275,13 @@ public class TransactionMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private boolean roleAccessEdit (String role) {
+        if (role.equals("moderator") || role.equals("admin")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -1,15 +1,33 @@
 package com.irlyreza.wallot.data;
 
 public class DataTransactionModel {
-    String id_transaction, nominal, description, date, id_wallet;
+    String id_transaction, nominal, description, date, id_wallet, id_user, type;
 
     public DataTransactionModel() {}
 
-    public DataTransactionModel(String nominal, String description, String date, String id_wallet) {
+    public DataTransactionModel(String nominal, String description, String date, String id_wallet, String id_user, String type) {
         this.nominal = nominal;
         this.description = description;
         this.date = date;
         this.id_wallet = id_wallet;
+        this.id_user = id_user;
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
     }
 
     public String getId_transaction() {

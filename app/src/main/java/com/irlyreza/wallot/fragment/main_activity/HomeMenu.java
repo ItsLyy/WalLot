@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.activity.AddWalletMenu;
 import com.irlyreza.wallot.activity.EditTransactionMenu;
 import com.irlyreza.wallot.adapter.DebtHorizontalListAdapter;
 import com.irlyreza.wallot.adapter.TransactionListAdapter;
@@ -64,6 +65,8 @@ public class HomeMenu extends Fragment {
     ArrayList<DataWalletModel> walletArray;
     ArrayList<DataDebtModel> debtArray;
 
+    TextView addWalletBtn;
+
 
     public HomeMenu() {
         // Required empty public constructor
@@ -104,6 +107,7 @@ public class HomeMenu extends Fragment {
         horizontalWallet = view.findViewById(R.id.horizontal_wallet_list);
         horizontalDebt = view.findViewById(R.id.horizontal_debt_list);
         username = view.findViewById(R.id.username);
+        addWalletBtn = view.findViewById(R.id.add_wallet_btn);
 
         SharedPreferences preferences = getActivity().getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
         idUser = preferences.getString("idUser", null);
@@ -125,7 +129,15 @@ public class HomeMenu extends Fragment {
                 intent.putExtra("description", transactionArray.get(adapterView.getCount() - i - 1).getDescription());
                 intent.putExtra("id_wallet", transactionArray.get(adapterView.getCount() - i - 1).getId_wallet());
                 intent.putExtra("date", transactionArray.get(adapterView.getCount() - i - 1).getDate());
+                intent.putExtra("type", transactionArray.get(adapterView.getCount() - i - 1).getType());
                 startActivity(intent);
+            }
+        });
+
+        addWalletBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), AddWalletMenu.class));
             }
         });
 
@@ -159,9 +171,14 @@ public class HomeMenu extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 transactionArray = new ArrayList<>();
                 for (DataSnapshot transactionItem: snapshot.getChildren()) {
-                    DataTransactionModel dataTransactionModel = transactionItem.getValue(DataTransactionModel.class);
-                    dataTransactionModel.setId_transaction(transactionItem.getKey());
-                    transactionArray.add(dataTransactionModel);
+                    if (Objects.equals(transactionItem.child("id_user").getValue(String.class), idUser)) {
+                        newestTransaction.setVisibility(View.VISIBLE);
+                        DataTransactionModel dataTransactionModel = transactionItem.getValue(DataTransactionModel.class);
+                        dataTransactionModel.setId_transaction(transactionItem.getKey());
+                        transactionArray.add(dataTransactionModel);
+                        break;
+                    }
+                    newestTransaction.setVisibility(View.GONE);
                 }
                 if (getActivity() != null) {
                     transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
@@ -181,20 +198,23 @@ public class HomeMenu extends Fragment {
                 walletReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshotWallet) {
-                            walletArray = new ArrayList<>();
-                            for (DataSnapshot walletItem : snapshotWallet.getChildren()) {
-                                for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
+                        walletArray = new ArrayList<>();
+                        for (DataSnapshot walletItem : snapshotWallet.getChildren()) {
+                            for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
                                 if (Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser) && Objects.equals(userWalletItem.child("id_wallet").getValue(String.class), walletItem.getKey())) {
+                                    horizontalWallet.setVisibility(View.VISIBLE);
                                     DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
                                     dataWalletModel.setId_wallet(walletItem.getKey());
                                     walletArray.add(dataWalletModel);
+                                    break;
                                 }
+                                horizontalWallet.setVisibility(View.VISIBLE);
                             }
+                        }
                         if(getActivity() != null) {
                             walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity(), getActivity().getApplicationContext(), walletArray);
                         }
                         horizontalWallet.setAdapter(walletHorizontalListAdapter);
-                        }
                     }
 
                     @Override
@@ -216,11 +236,15 @@ public class HomeMenu extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 debtArray = new ArrayList<>();
                 for (DataSnapshot debtItem : snapshot.getChildren()) {
-                    DataDebtModel dataDebtModel = debtItem.getValue(DataDebtModel.class);
-                    dataDebtModel.setId_debt(debtItem.getKey());
-                    debtArray.add(dataDebtModel);
+                    if (Objects.equals(debtItem.child("id_user").getValue(String.class), idUser)) {
+                        horizontalDebt.setVisibility(View.VISIBLE);
+                        DataDebtModel dataDebtModel = debtItem.getValue(DataDebtModel.class);
+                        dataDebtModel.setId_debt(debtItem.getKey());
+                        debtArray.add(dataDebtModel);
+                        break;
+                    }
+                    horizontalDebt.setVisibility(View.GONE);
                 }
-
                 if(getActivity() != null) {
                     debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity() ,getActivity().getApplicationContext(), debtArray);
                     horizontalDebt.setAdapter(debtHorizontalListAdapter);
@@ -232,5 +256,6 @@ public class HomeMenu extends Fragment {
 
             }
         });
+
     }
 }

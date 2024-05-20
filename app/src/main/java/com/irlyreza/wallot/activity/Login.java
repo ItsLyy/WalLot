@@ -82,24 +82,24 @@ public class Login extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < userArray.size(); i++) {
-                    if (userArray.get(i).getNameUser().equals(username.getText().toString()) && userArray.get(i).getPasswordUser().equals(password.getText().toString())) {
-                        if (rememberMe.isChecked()) {
-                            sharedPreferenceEditor.putString("idUser", userArray.get(i).getIdUser());
-                            sharedPreferenceEditor.putBoolean("isRemember", true);
-                            sharedPreferenceEditor.apply();
-                            startActivity(mainPage);
-                        } else {
-                            sharedPreferenceEditor.putString("idUser", userArray.get(i).getIdUser());
-                            sharedPreferenceEditor.apply();
-                            startActivity(mainPage);
+                try {
+                    for(int i = 0; i < userArray.size(); i++) {
+                        if (userArray.get(i).getNameUser().equals(username.getText().toString()) && userArray.get(i).getPasswordUser().equals(password.getText().toString())) {
+                            if (rememberMe.isChecked()) {
+                                sharedPreferenceEditor.putString("idUser", userArray.get(i).getIdUser());
+                                sharedPreferenceEditor.putBoolean("isRemember", true);
+                                sharedPreferenceEditor.apply();
+                                startActivity(mainPage);
+                            } else {
+                                sharedPreferenceEditor.putString("idUser", userArray.get(i).getIdUser());
+                                sharedPreferenceEditor.apply();
+                                startActivity(mainPage);
+                            }
+                            Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Incorrect Username or Password", Toast.LENGTH_SHORT).show();
-                        return;
                     }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Incorrect Username or Password", Toast.LENGTH_SHORT).show();
                 }
             }
         });

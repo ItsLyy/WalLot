@@ -1,5 +1,6 @@
 package com.irlyreza.wallot.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,14 @@ import androidx.core.content.ContextCompat;
 
 import com.irlyreza.wallot.R;
 import com.irlyreza.wallot.data.DataWalletModel;
+import com.irlyreza.wallot.data.RoleListData;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class RoleSpinnerAdapter extends ArrayAdapter<String> {
+public class RoleSpinnerAdapter extends ArrayAdapter<RoleListData> {
     LayoutInflater layoutInflater;
-    public RoleSpinnerAdapter(Context context, ArrayList<String> model) {
+    public RoleSpinnerAdapter(Context context, ArrayList<RoleListData> model) {
         super(context, R.layout.spinner_role_item, model);
     }
 
@@ -28,13 +31,14 @@ public class RoleSpinnerAdapter extends ArrayAdapter<String> {
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         view = LayoutInflater.from(getContext()).inflate(R.layout.spinner_role_item, null, true);
         TextView category = view.findViewById(R.id.spinner_wallet_name);
-        view.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_role_container));
+        view.setBackground(ContextCompat.getDrawable(getContext(), R.color.transparent));
 
-        category.setText(getItem(position));
+        category.setText(Objects.requireNonNull(getItem(position)).getRole());
 
         return view;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
@@ -42,7 +46,14 @@ public class RoleSpinnerAdapter extends ArrayAdapter<String> {
         }
         TextView category = convertView.findViewById(R.id.spinner_wallet_name);
 
-        category.setText(getItem(position));
+        if(Objects.requireNonNull(getItem(position)).getVisible()) {
+            convertView.setVisibility(View.VISIBLE);
+        } else {
+            convertView.setVisibility(View.INVISIBLE);
+            convertView.setEnabled(false);
+        }
+
+        category.setText(Objects.requireNonNull(getItem(position)).getRole());
         return convertView;
     }
 }

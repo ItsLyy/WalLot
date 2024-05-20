@@ -102,7 +102,7 @@ public class WalletDetailDebt extends Fragment {
                         debtArray.add(dataDebtModel);
                     }
                 }
-                if (!getActivity().equals(null)) {
+                if (getActivity() != null) {
                     debtVerticalListAdapter = new DebtVerticalListAdapter(getActivity(), getActivity().getApplicationContext(), debtArray);
                     debtVerticalList.setAdapter(debtVerticalListAdapter);
                 }
