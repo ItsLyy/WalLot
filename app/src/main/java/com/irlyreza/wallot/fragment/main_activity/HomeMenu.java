@@ -33,6 +33,7 @@ import com.irlyreza.wallot.data.DataUserWalletModel;
 import com.irlyreza.wallot.data.DataWalletModel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -180,18 +181,19 @@ public class HomeMenu extends Fragment {
                 walletReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshotWallet) {
-                        for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
                             walletArray = new ArrayList<>();
                             for (DataSnapshot walletItem : snapshotWallet.getChildren()) {
-                                if (userWalletItem.child("id_user").getValue(String.class).equals(idUser) && userWalletItem.child("id_wallet").getValue(String.class).equals(walletItem.getKey())) {
+                                for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
+                                if (Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser) && Objects.equals(userWalletItem.child("id_wallet").getValue(String.class), walletItem.getKey())) {
                                     DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
+                                    dataWalletModel.setId_wallet(walletItem.getKey());
                                     walletArray.add(dataWalletModel);
                                 }
                             }
-                            if(getActivity() != null) {
-                                walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity(), getActivity().getApplicationContext(), walletArray);
-                            }
-                            horizontalWallet.setAdapter(walletHorizontalListAdapter);
+                        if(getActivity() != null) {
+                            walletHorizontalListAdapter = new WalletHorizontalListAdapter(getActivity(), getActivity().getApplicationContext(), walletArray);
+                        }
+                        horizontalWallet.setAdapter(walletHorizontalListAdapter);
                         }
                     }
 
@@ -200,6 +202,7 @@ public class HomeMenu extends Fragment {
 
                     }
                 });
+
             }
 
             @Override

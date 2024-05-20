@@ -29,6 +29,7 @@ import com.irlyreza.wallot.adapter.MemberListAdapter;
 import com.irlyreza.wallot.data.DataUserWalletModel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,14 +107,16 @@ public class WalletDetailMember extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshotUserWallet) {
                 userWalletArray = new ArrayList<>();
                 for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
-
+                    if(Objects.equals(userWalletItem.child("id_wallet").getValue(String.class), idWallet)) {
                         DataUserWalletModel dataUserWalletModel = userWalletItem.getValue(DataUserWalletModel.class);
                         dataUserWalletModel.setId_user_wallet(userWalletItem.getKey());
                         userWalletArray.add(dataUserWalletModel);
-
+                    }
                 }
-                MemberListAdapter memberListAdapter = new MemberListAdapter(getActivity(), getActivity().getApplicationContext(), userWalletArray);
-                listMember.setAdapter(memberListAdapter);
+                if (getActivity() != null) {
+                    MemberListAdapter memberListAdapter = new MemberListAdapter(getActivity(), getActivity().getApplicationContext(), userWalletArray);
+                    listMember.setAdapter(memberListAdapter);
+                }
             }
 
             @Override

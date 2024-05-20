@@ -65,14 +65,14 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.My
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 holder.name.setText(snapshot.child(dataUserWalletModel.getId_user()).child("nameUser").getValue(String.class));
                 holder.icon.setImageResource(snapshot.child(dataUserWalletModel.getId_user()).child("profileImage").getValue(Integer.class));
-                if (Objects.equals(snapshot.child(dataUserWalletModel.getId_user()).child("role").getValue(String.class), "member")) {
+                if (dataUserWalletModel.getRole().equals("member")) {
                     holder.role.setVisibility(View.INVISIBLE);
                     holder.kickBtn.setVisibility(View.INVISIBLE);
-                } else if (Objects.equals(snapshot.child(dataUserWalletModel.getId_user()).child("role").getValue(String.class), "moderator")) {
+                } else if (dataUserWalletModel.getRole().equals("moderator")) {
                     holder.role.setVisibility(View.VISIBLE);
                     holder.kickBtn.setVisibility(View.VISIBLE);
                     holder.role.setSelection(1);
-                } else if (Objects.equals(snapshot.child(dataUserWalletModel.getId_user()).child("role").getValue(String.class), "admin")) {
+                } else if (dataUserWalletModel.getRole().equals("admin")) {
                     holder.kickBtn.setVisibility(View.VISIBLE);
                     holder.role.setVisibility(View.VISIBLE);
                     holder.role.setSelection(2);

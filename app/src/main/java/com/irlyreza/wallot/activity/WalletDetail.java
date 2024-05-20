@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.databinding.ActivityEditWalletMenuBinding;
 import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailDebt;
 import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailMember;
 import com.irlyreza.wallot.fragment.wallet_detail.WalletDetailTransaction;
@@ -90,7 +91,12 @@ public class WalletDetail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO pindah ke edit Wallet
-                Intent intent = new Intent();
+                Intent intent = new Intent(getApplicationContext(), EditWalletMenu.class);
+                intent.putExtra("idWallet", idWallet);
+                intent.putExtra("name", bundle.getString("name"));
+                intent.putExtra("nominal", bundle.getString("nominal"));
+                intent.putExtra("icon", bundle.getInt("icon"));
+                intent.putExtra("bgIcon", bundle.getInt("bgIcon"));
                 startActivity(intent);
             }
         });

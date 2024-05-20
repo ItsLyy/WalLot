@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="75dp"
     android:orientation="horizontal"
-    android:background="@color/dark_white"
+    android:background="@color/cyan_transparent"
     android:gravity="center_vertical"
-    android:padding="10dp">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/spinner_wallet_name"
@@ -13,7 +13,7 @@
         android:layout_height="30dp"
         android:text="Wallet"
         android:gravity="center_vertical"
-        android:paddingHorizontal="10dp"
-        android:textSize="20sp"/>
+        android:paddingHorizontal="5dp"
+        android:textSize="15sp"/>
 
 </LinearLayout>

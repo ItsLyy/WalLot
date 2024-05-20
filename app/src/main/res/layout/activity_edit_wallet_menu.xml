@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main"
+    android:background="@drawable/bg_gradient_blue"
+    tools:context=".activity.EditWalletMenu">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="60dp"
+        android:paddingVertical="30dp"
+        android:paddingHorizontal="20dp"
+        android:background="@drawable/transaction_input_container">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/transaction_input_field"
+            android:orientation="horizontal"
+            android:layout_marginVertical="5dp">
+
+            <EditText
+                android:id="@+id/name_wallet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/transaction_input_field"
+                android:drawableStart="@drawable/bn_wallet_icon"
+                android:drawablePadding="7dp"
+                android:hint="Name"
+                android:maxLength="10"
+                android:minHeight="70dp"
+                android:layout_weight="1"
+                android:paddingHorizontal="10dp"
+                android:textSize="18sp"/>
+            />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:text="0/6"
+                android:id="@+id/name_wallet_length"/>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Icon Background"
+            android:layout_marginTop="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:id="@+id/background_icon_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/cyan_stroke_selected">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/bg_corner_gradient_blue"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/background_icon_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/cyan_stroke_selected">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/bg_corner_gradient_red"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/background_icon_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/cyan_stroke_selected">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/bg_corner_gradient_green"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/background_icon_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/cyan_stroke_selected">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/bg_corner_gradient_purple"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Icon"
+            android:layout_marginTop="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:id="@+id/background_icon_display_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/cyan_stroke_selected">
+
+                <ImageView
+                    android:id="@+id/icon_1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_corner_gradient_blue"
+                    android:src="@drawable/card_icon"
+                    app:tint="@color/white"
+                    android:padding="10dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/background_icon_display_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/cyan_stroke_selected">
+
+                <ImageView
+                    android:id="@+id/icon_2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_corner_gradient_blue"
+                    android:src="@drawable/coin_icon"
+                    app:tint="@color/white"
+                    android:padding="10dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/background_icon_display_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/cyan_stroke_selected">
+
+                <ImageView
+                    android:id="@+id/icon_3"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_corner_gradient_blue"
+                    android:src="@drawable/stars_icon"
+                    app:tint="@color/white"
+                    android:padding="10dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/background_icon_display_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/cyan_stroke_selected">
+
+                <ImageView
+                    android:id="@+id/icon_4"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_corner_gradient_blue"
+                    android:src="@drawable/bn_wallet_icon"
+                    app:tint="@color/white"
+                    android:padding="10dp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+
+            <ImageView
+                android:id="@+id/delete_wallet_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginRight="5dp"
+                android:padding="8dp"
+                android:tint="@color/cyan"
+                android:background="@drawable/wallet_add_btn"
+                android:src="@drawable/delete_trasaction_icon"
+                tools:ignore="UseAppTint" />
+
+            <Button
+                android:id="@+id/update_wallet_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/wallet_add_btn"
+                android:text="Update"
+                android:textColor="@color/cyan"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

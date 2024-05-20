@@ -28,6 +28,7 @@ public class RoleSpinnerAdapter extends ArrayAdapter<String> {
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         view = LayoutInflater.from(getContext()).inflate(R.layout.spinner_role_item, null, true);
         TextView category = view.findViewById(R.id.spinner_wallet_name);
+        view.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_role_container));
 
         category.setText(getItem(position));
 
