@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:id="@+id/main"
+    tools:context=".fragment.main_activity.ProfileFragment">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
+<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@drawable/bg_gradient_blue"
         android:paddingTop="100px"
         android:paddingHorizontal="7dp"
-        android:paddingBottom="100dp">
+        android:paddingBottom="140dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -23,7 +28,7 @@
                 android:id="@+id/version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VERSION"
+                android:text="Alpha V1.0"
                 android:textColor="@color/white"
                 />
 
@@ -34,18 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/changePict"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="140dp"
-                android:layout_marginEnd="110dp"
-                android:layout_marginBottom="0dp"
-                android:background="@drawable/edit_photo_icon" />
-
             <ImageView
                 android:id="@+id/profilePict"
                 android:layout_width="180dp"
@@ -53,7 +46,9 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/image_border"
                 android:scaleType="centerCrop"
-                android:src="@drawable/bn_profile_icon" />
+                android:tint="@color/white"
+                android:src="@drawable/bn_profile_icon"
+                tools:ignore="UseAppTint" />
         </RelativeLayout>
 
         <LinearLayout
@@ -86,6 +81,13 @@
                 android:text="+628123456789"
                 android:textColor="@color/white"/>
 
+            <TextView
+                android:id="@+id/tx_idUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-ywaiduhwiadsadhuia"
+                android:textColor="@color/white"/>
+
 
         </LinearLayout>
 
@@ -107,10 +109,10 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/edit_icon" />
+                    android:src="@drawable/edit_icons" />
 
                 <Button
-
+                    android:id="@+id/btn_changeusername"
                     android:textColor="#5D5D5D"
                     android:textSize="20dp"
                     android:paddingLeft="2dp"
@@ -119,7 +121,6 @@
                     android:textAllCaps="false"
                     android:textAlignment="viewStart"
                     android:layout_gravity="start"
-                    android:id="@+id/btn_changeusername"
                     android:background="@drawable/bg_btn_transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -128,34 +129,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/list_wallet" />
-
-                <Button
-                    android:textColor="#5D5D5D"
-                    android:textSize="20dp"
-                    android:paddingLeft="2dp"
-                    android:layout_marginLeft="7dp"
-                    android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textAlignment="viewStart"
-                    android:layout_gravity="start"
-                    android:id="@+id/btn_listWallet"
-                    android:background="@drawable/bg_btn_transparent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="List wallet"/>
-
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_marginTop="10dp"
@@ -169,6 +143,7 @@
                     android:src="@drawable/password_icon" />
 
                 <Button
+                    android:id="@+id/btn_changePassword"
                     android:textColor="#5D5D5D"
                     android:textSize="20dp"
                     android:paddingLeft="2dp"
@@ -177,7 +152,6 @@
                     android:textAllCaps="false"
                     android:textAlignment="viewStart"
                     android:layout_gravity="start"
-                    android:id="@+id/btn_changePassword"
                     android:background="@drawable/bg_btn_transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -198,6 +172,7 @@
                     android:src="@drawable/email_icon" />
 
                 <Button
+                    android:id="@+id/btn_changeEmail"
                     android:textColor="#5D5D5D"
                     android:textSize="20dp"
                     android:paddingLeft="2dp"
@@ -206,7 +181,6 @@
                     android:textAllCaps="false"
                     android:textAlignment="viewStart"
                     android:layout_gravity="start"
-                    android:id="@+id/btn_changeEmail"
                     android:background="@drawable/bg_btn_transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -227,6 +201,7 @@
                     android:src="@drawable/phone_icon" />
 
                 <Button
+                    android:id="@+id/btn_changePhonenumb"
                     android:textColor="#5D5D5D"
                     android:textSize="20dp"
                     android:paddingLeft="2dp"
@@ -235,7 +210,6 @@
                     android:textAllCaps="false"
                     android:textAlignment="viewStart"
                     android:layout_gravity="start"
-                    android:id="@+id/btn_changePhonenumb"
                     android:background="@drawable/bg_btn_transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -253,38 +227,10 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/settings_icon" />
-
-                <Button
-                    android:textColor="#5D5D5D"
-                    android:textSize="20dp"
-                    android:paddingLeft="2dp"
-                    android:layout_marginLeft="7dp"
-                    android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textAlignment="viewStart"
-                    android:layout_gravity="start"
-                    android:id="@+id/btn_setting"
-                    android:background="@drawable/bg_btn_transparent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Go to Setting"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="match_parent"
                     android:src="@drawable/logout_icon" />
 
                 <Button
+                    android:id="@+id/logout_btn"
                     android:textColor="#FF0000"
                     android:textSize="20dp"
                     android:paddingLeft="2dp"
@@ -293,7 +239,6 @@
                     android:textAllCaps="false"
                     android:textAlignment="viewStart"
                     android:layout_gravity="start"
-                    android:id="@+id/btn"
                     android:background="@drawable/bg_btn_transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -309,10 +254,5 @@
 
 
     </LinearLayout>
-
-
-
-
-
-
-</ScrollView>
+    </ScrollView>
+</FrameLayout>

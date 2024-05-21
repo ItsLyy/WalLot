@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.fragment.main_activity.HomeMenu;
 import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.fragment.main_activity.ProfileFragment;
 import com.irlyreza.wallot.fragment.main_activity.WalletMenu;
 
 import java.text.NumberFormat;

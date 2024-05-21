@@ -13,34 +13,57 @@
         android:theme="@style/Theme.WalLot"
         tools:targetApi="31">
         <activity
-            android:name=".EditDebtMenu"
+            android:name=".activity.EditWalletMenu"
+            android:exported="false"
+            android:theme="@style/Theme.WalLot" />
+        <activity
+            android:name=".activity.AddWalletMenu"
+            android:exported="false"
+            android:theme="@style/Theme.WalLot" />
+        <activity
+            android:name=".overlay.AddFriendOverlay"
             android:exported="false" />
         <activity
-            android:name=".EditTransactionMenu"
+            android:name=".activity.EditDebtMenu"
             android:exported="false" />
         <activity
-            android:name=".TransactionMenu"
+            android:name=".activity.EditTransactionMenu"
             android:exported="false" />
         <activity
-            android:name=".WalletDetail"
+            android:name=".activity.TransactionMenu"
             android:exported="false" />
         <activity
-            android:name=".DebtMenu"
+            android:name=".activity.WalletDetail"
             android:exported="false" />
         <activity
-            android:name=".HomeMenu"
+            android:name=".activity.DebtMenu"
             android:exported="false" />
         <activity
-            android:name=".Transaction"
+            android:name=".fragment.main_activity.HomeMenu"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".overlay.Transaction"
+            android:exported="false" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".fragment.main_activity.ProfileFragment"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".activity.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.Signup"
+            android:exported="true">
         </activity>
     </application>
 

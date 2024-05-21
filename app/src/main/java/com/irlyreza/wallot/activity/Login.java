@@ -45,6 +45,7 @@ public class Login extends AppCompatActivity {
 
         if (!Objects.equals(sharedPreferences.getString("idUser", null), null) || Objects.equals(sharedPreferences.getString("isRemember", null), true)) {
             startActivity(mainPage);
+            finish();
         }
 
         username = findViewById(R.id.username);
@@ -90,10 +91,12 @@ public class Login extends AppCompatActivity {
                                 sharedPreferenceEditor.putBoolean("isRemember", true);
                                 sharedPreferenceEditor.apply();
                                 startActivity(mainPage);
+                                finish();
                             } else {
                                 sharedPreferenceEditor.putString("idUser", userArray.get(i).getIdUser());
                                 sharedPreferenceEditor.apply();
                                 startActivity(mainPage);
+                                finish();
                             }
                             Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
                         }
