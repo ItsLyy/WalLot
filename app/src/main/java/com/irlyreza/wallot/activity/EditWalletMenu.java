@@ -332,6 +332,7 @@ public class EditWalletMenu extends AppCompatActivity {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference userWalletReference = database.getReference("user_wallets");
                 DatabaseReference walletReference = database.getReference("wallets");
+                DatabaseReference transactionReference = database.getReference("transactions");
 
                 userWalletReference.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -340,7 +341,21 @@ public class EditWalletMenu extends AppCompatActivity {
                             if (itemUserWallet.child("id_wallet").getValue(String.class).equals(idWallets)) {
                                 userWalletReference.child(itemUserWallet.getKey()).removeValue();
                                 walletReference.child(idWallets).removeValue();
+                                transactionReference.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshotTransaction) {
+                                        for (DataSnapshot itemTransaction : snapshotTransaction.getChildren()) {
+                                            if(itemTransaction.child("id_wallets").getValue().equals(idWallets)) {
+                                                transactionReference.child(itemTransaction.getKey()).removeValue();
+                                            }
+                                        }
+                                    }
 
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
                         }
                     }

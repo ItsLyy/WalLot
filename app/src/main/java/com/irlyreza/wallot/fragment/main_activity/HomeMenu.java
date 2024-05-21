@@ -33,7 +33,9 @@ import com.irlyreza.wallot.data.DataTransactionModel;
 import com.irlyreza.wallot.data.DataUserWalletModel;
 import com.irlyreza.wallot.data.DataWalletModel;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -54,8 +56,9 @@ public class HomeMenu extends Fragment {
     ListView newestTransaction;
     RecyclerView horizontalWallet;
     RecyclerView horizontalDebt;
-    TextView username;
-    String idUser;
+    TextView username, totalBalance, personDebt, yourDebt;
+    String idUser, displayBalance, displayYourDebt, displayPersonDebt;
+
     LinearLayoutManager linearLayoutManager, linearLayoutManager1;
 
     TransactionListAdapter transactionListAdapter;
@@ -64,6 +67,7 @@ public class HomeMenu extends Fragment {
     ArrayList<DataTransactionModel> transactionArray;
     ArrayList<DataWalletModel> walletArray;
     ArrayList<DataDebtModel> debtArray;
+    int totalMoney, totalPersonDebt, totalYourDebt;
 
     TextView addWalletBtn;
 
@@ -108,6 +112,9 @@ public class HomeMenu extends Fragment {
         horizontalDebt = view.findViewById(R.id.horizontal_debt_list);
         username = view.findViewById(R.id.username);
         addWalletBtn = view.findViewById(R.id.add_wallet_btn);
+        totalBalance = view.findViewById(R.id.totalBalance);
+        personDebt = view.findViewById(R.id.person_debt);
+        yourDebt = view.findViewById(R.id.your_debt);
 
         SharedPreferences preferences = getActivity().getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
         idUser = preferences.getString("idUser", null);
@@ -195,6 +202,7 @@ public class HomeMenu extends Fragment {
             }
         });
 
+
         userWalletReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshotUserWallet) {
@@ -202,8 +210,17 @@ public class HomeMenu extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshotWallet) {
                         walletArray = new ArrayList<>();
+                        totalMoney = 0;
+                        displayBalance = "";
                         for (DataSnapshot walletItem : snapshotWallet.getChildren()) {
                             for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
+                                if (userWalletItem.child("displayBalance").getValue(Boolean.class).equals(true) && userWalletItem.child("id_user").getValue(String.class).equals(idUser) && userWalletItem.child("id_wallet").getValue(String.class).equals(walletItem.getKey())) {
+                                    totalMoney += Integer.parseInt(unformatRupiah(walletItem.child("nominal").getValue(String.class)));
+                                }
+                                displayBalance = String.valueOf(totalMoney);
+                                String replace = displayBalance.toString().replaceAll("[Rp. ]", "");
+                                totalBalance.setText(formatRupiah(Double.parseDouble(replace)));
+
                                 if (Objects.equals(userWalletItem.child("id_user").getValue(String.class), idUser) && Objects.equals(userWalletItem.child("id_wallet").getValue(String.class), walletItem.getKey())) {
                                     horizontalWallet.setVisibility(View.VISIBLE);
                                     DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
@@ -240,13 +257,24 @@ public class HomeMenu extends Fragment {
                 debtArray = new ArrayList<>();
                 for (DataSnapshot debtItem : snapshot.getChildren()) {
                     if (snapshot.hasChildren() && Objects.equals(debtItem.child("id_user").getValue(String.class), idUser)) {
-                            horizontalDebt.setVisibility(View.VISIBLE);
-                            DataDebtModel dataDebtModel = debtItem.getValue(DataDebtModel.class);
-                            dataDebtModel.setId_debt(debtItem.getKey());
-                           debtArray.add(dataDebtModel);
+                        horizontalDebt.setVisibility(View.VISIBLE);
+                        DataDebtModel dataDebtModel = debtItem.getValue(DataDebtModel.class);
+                        dataDebtModel.setId_debt(debtItem.getKey());
+                        debtArray.add(dataDebtModel);
+
+                        if (debtItem.child("type").getValue(String.class).equals("giver")) {
+                            totalPersonDebt += Integer.parseInt(unformatRupiah(debtItem.child("nominal").getValue(String.class)));
+                        } else if (debtItem.child("type").getValue(String.class).equals("receiver")) {
+                            totalYourDebt += Integer.parseInt(unformatRupiah(debtItem.child("nominal").getValue(String.class)));
+                        }
+                        displayYourDebt = String.valueOf(totalYourDebt);
+                        displayPersonDebt = String.valueOf(totalPersonDebt);
+                        yourDebt.setText(formatRupiah(Double.parseDouble(displayYourDebt)));
+                        personDebt.setText(formatRupiah(Double.parseDouble(displayPersonDebt)));
+                    } else {
+                        horizontalDebt.setVisibility(View.GONE);
                     }
                 }
-                horizontalDebt.setVisibility(View.GONE);
                 if(getActivity() != null) {
                     debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity() ,getActivity().getApplicationContext(), debtArray);
                     horizontalDebt.setAdapter(debtHorizontalListAdapter);
@@ -259,5 +287,17 @@ public class HomeMenu extends Fragment {
             }
         });
 
+    }
+    private String formatRupiah(Double number) {
+        Locale localeId = new Locale("IND", "ID");
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(localeId);
+        String formatrupiah = numberFormat.format(number);
+        String[] split = formatrupiah.split(",");
+        int length = split[0].length();
+        return  split[0].substring(2,length).replace("p", "-");
+    }
+    private String unformatRupiah(String number) {
+        String split = number.replace(".", "");
+        return  split;
     }
 }

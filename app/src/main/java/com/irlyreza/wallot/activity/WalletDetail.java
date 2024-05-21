@@ -45,7 +45,7 @@ public class WalletDetail extends AppCompatActivity {
     ConstraintLayout backgroundContainer;
 
     LinearLayout memberBtn, transactionBtn, debtBtn;
-    Boolean isDisplay = false;
+    Boolean isDisplay = false, isFirstTime = true;
 
     String idWallet;
     private String idUser;
@@ -202,6 +202,8 @@ public class WalletDetail extends AppCompatActivity {
         DatabaseReference userWalletReferencer = database.getReference("user_wallets");
         DatabaseReference walletReference = database.getReference("wallets");
 
+        final String[] id_user_wallets = new String[1];
+
         userWalletReferencer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -239,13 +241,18 @@ public class WalletDetail extends AppCompatActivity {
         userWalletReferencer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                isDisplay = snapshot.child(idWallet).child("display").getValue(Boolean.class);
-                if (isDisplay) {
-                    walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display2_container));
-                    walletNominalAdd.setColorFilter(getColor(R.color.white));
-                } else {
-                    walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display1_container));
-                    walletNominalAdd.setColorFilter(getColor(R.color.cyan));
+                for (DataSnapshot itemUserWallet : snapshot.getChildren()) {
+                    if(Objects.equals(itemUserWallet.child("id_wallet").getValue(String.class), idWallet)) {
+                        isDisplay = itemUserWallet.child("displayBalance").getValue(Boolean.class);
+                        id_user_wallets[0] = itemUserWallet.getKey();
+                        if (Boolean.TRUE.equals(isDisplay)) {
+                            walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display2_container));
+                            walletNominalAdd.setColorFilter(getColor(R.color.white));
+                        } else {
+                            walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display1_container));
+                            walletNominalAdd.setColorFilter(getColor(R.color.cyan));
+                        }
+                    }
                 }
             }
 
@@ -275,10 +282,30 @@ public class WalletDetail extends AppCompatActivity {
         acceptBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isFirstTime = true;
                 if (!isDisplay) {
-                    walletReference.child(idWallet).child("display").setValue(true);
-                    walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display2_container));
-                    walletNominalAdd.setColorFilter(getColor(R.color.white));
+                    userWalletReferencer.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot itemUserWallet : snapshot.getChildren()) {
+                                if(Objects.equals(itemUserWallet.child("id_wallet").getValue(String.class), idWallet)) {
+                                    isDisplay = itemUserWallet.child("displayBalance").getValue(Boolean.class);
+                                    if (Boolean.FALSE.equals(isDisplay) && isFirstTime) {
+                                        userWalletReferencer.child(itemUserWallet.getKey()).child("displayBalance").setValue(true);
+                                        walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display2_container));
+                                        walletNominalAdd.setColorFilter(getColor(R.color.white));
+                                        isDisplay = true;
+                                        isFirstTime = false;
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
                 dialog.dismiss();
             }
@@ -296,7 +323,7 @@ public class WalletDetail extends AppCompatActivity {
                 if (!isDisplay) {
                     dialog.show();
                 } else {
-                    walletReference.child(idWallet).child("display").setValue(false);
+                    userWalletReferencer.child(id_user_wallets[0]).child("displayBalance").setValue(false);
                     walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display1_container));
                     walletNominalAdd.setColorFilter(getColor(R.color.cyan));
                 }
