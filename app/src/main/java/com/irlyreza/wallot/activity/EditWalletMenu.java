@@ -24,8 +24,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.irlyreza.wallot.R;
 import com.irlyreza.wallot.adapter.WalletSpinnerAdapter;
 import com.irlyreza.wallot.data.DataDebtModel;
@@ -308,7 +311,7 @@ public class EditWalletMenu extends AppCompatActivity {
         updateWalletBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataWalletModel dataWalletModel = new DataWalletModel(nameWallet.getText().toString(), "0", iconWallet, backgroundIconWallet);
+                DataWalletModel dataWalletModel = new DataWalletModel(nameWallet.getText().toString(), nominalWallets, iconWallet, backgroundIconWallet);
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference walletReference = database.getReference("wallets");
@@ -327,9 +330,28 @@ public class EditWalletMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference userWalletReference = database.getReference("user_wallets");
                 DatabaseReference walletReference = database.getReference("wallets");
 
-                walletReference.child(idWallets).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                userWalletReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshotUserWallet) {
+                        for (DataSnapshot itemUserWallet : snapshotUserWallet.getChildren()) {
+                            if (itemUserWallet.child("id_wallet").getValue(String.class).equals(idWallets)) {
+                                userWalletReference.child(itemUserWallet.getKey()).removeValue();
+                                walletReference.child(idWallets).removeValue();
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                userWalletReference.child(idWallets).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);

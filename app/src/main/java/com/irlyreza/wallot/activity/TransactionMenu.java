@@ -61,7 +61,7 @@ public class TransactionMenu extends AppCompatActivity {
     int selectedMode = 1;
     // Income = 1 || Outcome = 2
     String category, idWallet;
-    private String idUser, type;
+    private String idUser, type = "income";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +131,7 @@ public class TransactionMenu extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                transactionDescriptionLength.setText(transactionDescription.length() + "/50");
+                transactionDescriptionLength.setText(transactionDescription.length() + "/16");
             }
 
             @Override

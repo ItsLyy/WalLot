@@ -171,14 +171,17 @@ public class HomeMenu extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 transactionArray = new ArrayList<>();
                 for (DataSnapshot transactionItem: snapshot.getChildren()) {
-                    if (Objects.equals(transactionItem.child("id_user").getValue(String.class), idUser)) {
-                        newestTransaction.setVisibility(View.VISIBLE);
-                        DataTransactionModel dataTransactionModel = transactionItem.getValue(DataTransactionModel.class);
-                        dataTransactionModel.setId_transaction(transactionItem.getKey());
-                        transactionArray.add(dataTransactionModel);
-                        break;
+                    if (snapshot.hasChildren() && Objects.equals(transactionItem.child("id_user").getValue(String.class), idUser)) {
+                        if (Objects.equals(transactionItem.child("id_user").getValue(String.class), idUser)) {
+                            newestTransaction.setVisibility(View.VISIBLE);
+                            DataTransactionModel dataTransactionModel = transactionItem.getValue(DataTransactionModel.class);
+                            dataTransactionModel.setId_transaction(transactionItem.getKey());
+                            transactionArray.add(dataTransactionModel);
+                        }
                     }
-                    newestTransaction.setVisibility(View.GONE);
+                    else {
+                        newestTransaction.setVisibility(View.GONE);
+                    }
                 }
                 if (getActivity() != null) {
                     transactionListAdapter = new TransactionListAdapter(getActivity().getApplicationContext(), transactionArray);
@@ -206,9 +209,9 @@ public class HomeMenu extends Fragment {
                                     DataWalletModel dataWalletModel = walletItem.getValue(DataWalletModel.class);
                                     dataWalletModel.setId_wallet(walletItem.getKey());
                                     walletArray.add(dataWalletModel);
-                                    break;
+                                } else {
+                                    horizontalWallet.setVisibility(View.GONE);
                                 }
-                                horizontalWallet.setVisibility(View.GONE);
                             }
                         }
                         if(getActivity() != null) {
@@ -236,15 +239,14 @@ public class HomeMenu extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 debtArray = new ArrayList<>();
                 for (DataSnapshot debtItem : snapshot.getChildren()) {
-                    if (Objects.equals(debtItem.child("id_user").getValue(String.class), idUser)) {
-                        horizontalDebt.setVisibility(View.VISIBLE);
-                        DataDebtModel dataDebtModel = debtItem.getValue(DataDebtModel.class);
-                        dataDebtModel.setId_debt(debtItem.getKey());
-                        debtArray.add(dataDebtModel);
-                        break;
+                    if (snapshot.hasChildren() && Objects.equals(debtItem.child("id_user").getValue(String.class), idUser)) {
+                            horizontalDebt.setVisibility(View.VISIBLE);
+                            DataDebtModel dataDebtModel = debtItem.getValue(DataDebtModel.class);
+                            dataDebtModel.setId_debt(debtItem.getKey());
+                           debtArray.add(dataDebtModel);
                     }
-                    horizontalDebt.setVisibility(View.GONE);
                 }
+                horizontalDebt.setVisibility(View.GONE);
                 if(getActivity() != null) {
                     debtHorizontalListAdapter = new DebtHorizontalListAdapter(getActivity() ,getActivity().getApplicationContext(), debtArray);
                     horizontalDebt.setAdapter(debtHorizontalListAdapter);

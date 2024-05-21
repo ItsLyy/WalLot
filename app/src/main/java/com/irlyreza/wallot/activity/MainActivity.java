@@ -36,6 +36,7 @@ import com.irlyreza.wallot.fragment.main_activity.WalletMenu;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     ImageView homeIcon;
@@ -313,13 +314,18 @@ public class MainActivity extends AppCompatActivity {
                             totalBalance = 0;
                             displayBalance = "";
                             for (DataSnapshot transactionItem : snapshotTransaction.getChildren()) {
-                                if (transactionItem.child("id_wallet").getValue(String.class).equals(walletItem.getKey())) {
-                                    totalBalance += Integer.parseInt(unformatRupiah(transactionItem.child("nominal").getValue(String.class)));
+                                if (Objects.equals(transactionItem.child("id_wallet").getValue(String.class), walletItem.getKey())) {
+                                    if(Objects.equals(transactionItem.child("type").getValue(String.class), "income")) {
+                                        totalBalance += Integer.parseInt(unformatRupiah(transactionItem.child("nominal").getValue(String.class)));
+                                    } else if (Objects.equals(transactionItem.child("type").getValue(String.class), "outcome")) {
+                                        totalBalance -= Integer.parseInt(unformatRupiah(transactionItem.child("nominal").getValue(String.class)));
+                                    }
                                 }
                             }
                             displayBalance = String.valueOf(totalBalance);
                             String replace = displayBalance.toString().replaceAll("[Rp. ]", "");
-                            walletReference.child(walletItem.getKey()).child("nominal").setValue(formatRupiah(Double.parseDouble(replace)));
+                            String replace1 = replace.toString().replaceAll("p", "-");
+                            walletReference.child(walletItem.getKey()).child("nominal").setValue(formatRupiah(Double.parseDouble(replace1)));
                         }
                     }
 
