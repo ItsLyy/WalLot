@@ -154,7 +154,7 @@ public class WalletDetailMember extends Fragment {
                     public void onClick(View view) {
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference userWalletReference = database.getReference("user_wallets");
-                        DataUserWalletModel dataUserWalletModel = new DataUserWalletModel(idFriend.getText().toString(), idWallet, "member");
+                        DataUserWalletModel dataUserWalletModel = new DataUserWalletModel(idFriend.getText().toString(), idWallet, "member", false);
 
                         String idUserWallet = userWalletReference.push().getKey();
                         userWalletReference.child(idUserWallet).setValue(dataUserWalletModel);

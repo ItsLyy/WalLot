@@ -324,8 +324,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             displayBalance = String.valueOf(totalBalance);
                             String replace = displayBalance.toString().replaceAll("[Rp. ]", "");
-                            String replace1 = replace.toString().replaceAll("p", "-");
-                            walletReference.child(walletItem.getKey()).child("nominal").setValue(formatRupiah(Double.parseDouble(replace1)));
+                            walletReference.child(walletItem.getKey()).child("nominal").setValue(formatRupiah(Double.parseDouble(replace)));
                         }
                     }
 
@@ -349,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
         String formatrupiah = numberFormat.format(number);
         String[] split = formatrupiah.split(",");
         int length = split[0].length();
-        return  split[0].substring(2,length);
+        return  split[0].substring(2,length).replace("p", "-");
     }
 
     private String unformatRupiah(String number) {

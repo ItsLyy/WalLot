@@ -67,6 +67,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -111,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="5dp"
-                    android:text="Total Saldo"
+                    android:text="Total Balance"
                     android:textAlignment="center"
                     android:textSize="50sp" />
 
@@ -185,6 +187,20 @@
                     </LinearLayout>
 
                 </LinearLayout>
+                <ImageView
+                    android:id="@+id/nominal_display"
+                    android:layout_width="80dp"
+                    android:textColor="@color/cyan"
+                    android:layout_height="30dp"
+                    android:background="@drawable/bg_role_container"
+                    android:elevation="4dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:src="@drawable/bn_home_icon"
+                    android:padding="5dp"
+                    android:tint="@color/cyan"
+                    android:layout_marginVertical="20dp"
+                    tools:ignore="UseAppTint" />
 
 
                 <androidx.fragment.app.FragmentContainerView

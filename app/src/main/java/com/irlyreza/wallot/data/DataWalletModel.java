@@ -3,6 +3,7 @@ package com.irlyreza.wallot.data;
 public class DataWalletModel {
     String id_wallet, name, nominal;
     int icon, bgIcon;
+    boolean isDisplay;
 
     DataWalletModel() {}
 

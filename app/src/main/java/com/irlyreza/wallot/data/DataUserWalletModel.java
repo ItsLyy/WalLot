@@ -5,13 +5,6 @@ public class DataUserWalletModel {
     Boolean displayBalance;
 
     DataUserWalletModel() {}
-
-    public DataUserWalletModel(String id_user, String id_wallet, String role) {
-        this.id_user = id_user;
-        this.id_wallet = id_wallet;
-        this.role = role;
-    }
-
     public DataUserWalletModel(String id_user, String id_wallet, String role, Boolean displayBalance) {
         this.id_user = id_user;
         this.id_wallet = id_wallet;

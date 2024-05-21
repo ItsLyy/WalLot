@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="1dp"
+    android:background="@drawable/bg_corner_gradient_blue">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:background="@drawable/dialog_form_container">
+
+        <TextView
+            android:id="@+id/task_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Are you sure want to { TASK } ?"
+            android:textSize="16sp"
+            android:padding="20dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        >
+
+        <Button
+            android:id="@+id/reject_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginRight=".5dp"
+            android:text="No"
+            android:background="@drawable/dialog_form_left_bottom_container"/>
+
+        <Button
+            android:id="@+id/accept_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft=".5dp"
+            android:text="Yes"
+            android:background="@drawable/dialog_form_right_bottom_container"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,10 +1,15 @@
 package com.irlyreza.wallot.activity;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,10 +41,11 @@ import java.util.Objects;
 
 public class WalletDetail extends AppCompatActivity {
     TextView nameWallet, nominalWallet;
-    ImageView iconWallet, iconMember, iconTransaction, iconDebt, walletEdit, walletLeave;
+    ImageView iconWallet, iconMember, iconTransaction, iconDebt, walletEdit, walletLeave, walletNominalAdd;
     ConstraintLayout backgroundContainer;
 
     LinearLayout memberBtn, transactionBtn, debtBtn;
+    Boolean isDisplay = false;
 
     String idWallet;
     private String idUser;
@@ -59,17 +65,19 @@ public class WalletDetail extends AppCompatActivity {
         iconWallet = findViewById(R.id.wallet_icon);
         backgroundContainer = findViewById(R.id.background_container);
         walletLeave = findViewById(R.id.leave_wallet);
+        walletNominalAdd = findViewById(R.id.nominal_display);
 
         Bundle bundle = getIntent().getExtras();
         nameWallet.setText(bundle.getString("name"));
-        nominalWallet.setText(bundle.getString("nominal"));
+        String displayNominal = bundle.getString("nominal");
+        nominalWallet.setText(displayNominal);
         iconWallet.setImageResource(bundle.getInt("icon"));
         idWallet = bundle.getString("idWallet");
 
         SharedPreferences preferences = getSharedPreferences("LOGINAPP", Context.MODE_PRIVATE);
         idUser = preferences.getString("idUser", null);
 
-        if(bundle.getInt("bgIcon") == R.drawable.bg_corner_gradient_blue) {
+        if (bundle.getInt("bgIcon") == R.drawable.bg_corner_gradient_blue) {
             backgroundContainer.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_gradient_blue));
             iconWallet.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_icon_gradient_blue));
         } else if (bundle.getInt("bgIcon") == R.drawable.bg_corner_gradient_green) {
@@ -192,6 +200,7 @@ public class WalletDetail extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userWalletReferencer = database.getReference("user_wallets");
+        DatabaseReference walletReference = database.getReference("wallets");
 
         userWalletReferencer.addValueEventListener(new ValueEventListener() {
             @Override
@@ -204,12 +213,12 @@ public class WalletDetail extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 if (userWalletItem.child("id_user").getValue(String.class).equals(idUser) && userWalletItem.child("id_wallet").getValue(String.class).equals(idWallet)) {
-                                   userWalletReferencer.child(userWalletItem.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                       @Override
-                                       public void onComplete(@NonNull Task<Void> task) {
-                                           startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                       }
-                                   });
+                                    userWalletReferencer.child(userWalletItem.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                        }
+                                    });
                                 }
                             }
                         });
@@ -224,6 +233,73 @@ public class WalletDetail extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        userWalletReferencer.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                isDisplay = snapshot.child(idWallet).child("display").getValue(Boolean.class);
+                if (isDisplay) {
+                    walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display2_container));
+                    walletNominalAdd.setColorFilter(getColor(R.color.white));
+                } else {
+                    walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display1_container));
+                    walletNominalAdd.setColorFilter(getColor(R.color.cyan));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // NOTE dialog
+
+        Dialog dialog = new Dialog(WalletDetail.this);
+        dialog.setContentView(R.layout.dialog_box);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_corner_gradient_blue));
+        dialog.setCancelable(false);
+
+        Button acceptBtn, rejectBtn;
+        TextView taskText;
+
+        acceptBtn = dialog.findViewById(R.id.accept_btn);
+        rejectBtn = dialog.findViewById(R.id.reject_btn);
+
+        taskText = dialog.findViewById(R.id.task_text);
+        taskText.setText("Are you sure want to add wallet's balance to total balance?");
+
+        acceptBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isDisplay) {
+                    walletReference.child(idWallet).child("display").setValue(true);
+                    walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display2_container));
+                    walletNominalAdd.setColorFilter(getColor(R.color.white));
+                }
+                dialog.dismiss();
+            }
+        });
+
+        rejectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        walletNominalAdd.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (!isDisplay) {
+                    dialog.show();
+                } else {
+                    walletReference.child(idWallet).child("display").setValue(false);
+                    walletNominalAdd.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_nominal_display1_container));
+                    walletNominalAdd.setColorFilter(getColor(R.color.cyan));
+                }
             }
         });
     }

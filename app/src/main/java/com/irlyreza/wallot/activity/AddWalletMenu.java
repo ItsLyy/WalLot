@@ -225,7 +225,7 @@ public class AddWalletMenu extends AppCompatActivity {
                 walletReference.child(id_wallet).setValue(dataWalletModel).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        DataUserWalletModel dataUserWalletModel = new DataUserWalletModel(sharedPreferences.getString("idUser", ""), id_wallet, "admin");
+                        DataUserWalletModel dataUserWalletModel = new DataUserWalletModel(sharedPreferences.getString("idUser", ""), id_wallet, "admin", false);
                         userWalletReference.child(id_user_wallet).setValue(dataUserWalletModel);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
