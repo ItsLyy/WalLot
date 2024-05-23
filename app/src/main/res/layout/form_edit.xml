@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="89dp"
+        android:text="LOGO"
+        android:textSize="200px" />
+
+    <EditText
+        android:id="@+id/userEmail"
+        android:layout_width="267dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="57dp"
+        android:background="@drawable/bg_edittext"
+        android:hint="New E-mail"
+        android:padding="10dp"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/userPhonenumb"
+        android:layout_width="267dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userEmail"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="57dp"
+        android:background="@drawable/bg_edittext"
+        android:hint="New phone number"
+        android:padding="10dp"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+
+    <EditText
+        android:id="@+id/txUsername"
+        android:layout_width="267dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userPhonenumb"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="57dp"
+        android:background="@drawable/bg_edittext"
+        android:hint="Create Username"
+        android:padding="10dp"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/txPassword"
+        android:inputType="textPassword"
+        android:layout_width="267dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txUsername"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="57dp"
+        android:background="@drawable/bg_edittext"
+        android:hint="New Password"
+        android:padding="10dp"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="267dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txPassword"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="59dp"
+        android:background="@drawable/bg_icon_gradient_blue"
+        android:text="Commit Changes"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_below="@+id/btn_update"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="151dp"
+        android:background="@android:color/transparent"
+        android:padding="5dp"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="#FF6200EE" />
+
+
+</RelativeLayout>
