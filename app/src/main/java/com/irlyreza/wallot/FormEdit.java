@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.irlyreza.wallot.fragment.main_activity.ProfileFragment;
+
 public class FormEdit extends AppCompatActivity {
 
     EditText txUsername,txPassword,userEmail,userPhonenumb;

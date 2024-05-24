@@ -29,13 +29,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.irlyreza.wallot.fragment.main_activity.ReportFragment;
 import com.irlyreza.wallot.fragment.main_activity.HomeMenu;
 import com.irlyreza.wallot.R;
 import com.irlyreza.wallot.fragment.main_activity.ProfileFragment;
 import com.irlyreza.wallot.fragment.main_activity.WalletMenu;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 

@@ -163,7 +163,8 @@ public class EditTransactionMenu extends AppCompatActivity {
                         months = month;
                         days = dayOfMonth;
 
-                        datePickerTransaction.setText(years + "-" + months + "-" + days);
+                        String formattedDate = String.format(Locale.getDefault(), "%02d-%02d-%04d", days, months + 1, years);
+                        datePickerTransaction.setText(formattedDate);
                     }
                 }, years, months, days);
                 dialog.show();

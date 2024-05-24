@@ -212,8 +212,8 @@ public class HomeMenu extends Fragment {
                         walletArray = new ArrayList<>();
                         totalMoney = 0;
                         displayBalance = "";
-                        for (DataSnapshot walletItem : snapshotWallet.getChildren()) {
-                            for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
+                        for (DataSnapshot userWalletItem : snapshotUserWallet.getChildren()) {
+                            for (DataSnapshot  walletItem: snapshotWallet.getChildren()) {
                                 if (userWalletItem.child("displayBalance").getValue(Boolean.class).equals(true) && userWalletItem.child("id_user").getValue(String.class).equals(idUser) && userWalletItem.child("id_wallet").getValue(String.class).equals(walletItem.getKey())) {
                                     totalMoney += Integer.parseInt(unformatRupiah(walletItem.child("nominal").getValue(String.class)));
                                 }
