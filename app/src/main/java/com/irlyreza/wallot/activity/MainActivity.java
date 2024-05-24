@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 if (selectedTab != 2) {
                     getSupportFragmentManager().beginTransaction().
                             setReorderingAllowed(true).
-                            replace(R.id.fragment_container, WalletMenu.class, null).
+                            replace(R.id.fragment_container, ReportFragment.class, null).
                             commit();
 
                     homeLabel.setVisibility(View.GONE);
