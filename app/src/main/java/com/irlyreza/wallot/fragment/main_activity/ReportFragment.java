@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.sql.RowId;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -63,7 +65,7 @@ public class ReportFragment extends Fragment {
 
     private RadioGroup radioGroup,dailyRadioGroup,weeklyRadioGroup,monthlyRadioGroup,yearlyRadioGroup;
 
-    private RadioButton dailyRadioButton, weeklyRadioButton, monthlyRadioButton, yearlyRadioButton, dailyIncomeRadio, dailyOutcomeRadio, weeklyIncomeRadio,weeklyOutcomeRadio,monthlyIncomeRadio, monthlyOutcomeRadio, yearlyIncomeRadio,yearlyOutcomeRadio;
+    private RadioButton  weeklyDebtRadio,dailyDebtRadio, monthlyDebtRadio, yearlyDebtRadio, dailyRadioButton, weeklyRadioButton, monthlyRadioButton, yearlyRadioButton, dailyIncomeRadio, dailyOutcomeRadio, weeklyIncomeRadio,weeklyOutcomeRadio,monthlyIncomeRadio, monthlyOutcomeRadio, yearlyIncomeRadio,yearlyOutcomeRadio;
     private View dailyContentLayout, weeklyContentLayout, monthlyContentLayout, yearlyContentLayout;
 
     private TextView dailyIncomeTotal, dailyOutcomeTotal, dailyDebtTotal, weeklyIncomeTotal, weeklyOutcomeTotal, weeklyDebtTotal, monthlyIncomeTotal, monthlyOutcomeTotal, monthlyDebtTotal, yearlyIncomeTotal, yearlyOutcomeTotal, yearlyDebtTotal;
@@ -74,6 +76,8 @@ public class ReportFragment extends Fragment {
     private ArrayList<DataUserWalletModel> dataUserWalletArray;
     private ArrayList<DataTransactionModel> dataTransactionArray;
     private String idUser;
+
+
     List<Integer> incomeDay;//TODO(get income WHERE date = this.dateToday --> DataType required : Int)
     List<Integer> outcomeDay;//TODO(get outcome WHERE date = this.dateToday --> DataType required : Int)
     List<Integer> debtDaily;//TODO(get debt WHERE date = this.dateToday --> DataType required : Int)
@@ -87,9 +91,11 @@ public class ReportFragment extends Fragment {
     List<Integer> outcomeYearly;//TODO(get all outcome WHERE date IN (this.dateBeetwen) // ( List<String> dateBeetwen = DateRange.getDateRange(startDate, endDate);)--> DataType required : Int)
     List<Integer> debtYearly;//TODO(get debt WHERE date = this.dateBeetwen// ( List<String> dateBeetwen = DateRange.getDateRange(startDate, endDate);)--> DataType required : Int)
 
+    private PieChart pieChart;
 
 
 
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -130,6 +136,10 @@ public class ReportFragment extends Fragment {
 
         dailyIncomeRadio = view.findViewById(R.id.dailyIncomeRadio);
         dailyOutcomeRadio = view.findViewById(R.id.dailyOutcomeRadio);
+        dailyDebtRadio = view.findViewById(R.id.dailyDebtRadio);
+        weeklyDebtRadio = view.findViewById(R.id.weeklyDebtRadio);
+        monthlyDebtRadio = view.findViewById(R.id.monthlyRadioDebt);
+        yearlyDebtRadio = view.findViewById(R.id.yearlyDebtRadio);
         weeklyIncomeRadio = view.findViewById(R.id.weeklyIncomeRadio);
         weeklyOutcomeRadio = view.findViewById(R.id.weeklyOutcomeRadio);
         monthlyIncomeRadio = view.findViewById(R.id.monthlyIncomeRadio);
@@ -138,10 +148,10 @@ public class ReportFragment extends Fragment {
         yearlyOutcomeRadio = view.findViewById(R.id.yearlyOutcomeRadio);
 
         dailyRadioButton.setChecked(true);
-        dailyIncomeRadio.setChecked(true);
-        weeklyIncomeRadio.setChecked(true);
-        monthlyIncomeRadio.setChecked(true);
-        yearlyIncomeRadio.setChecked(true);
+
+
+        pieChart = view.findViewById(R.id.pieChart);
+
 
 
 
@@ -149,6 +159,8 @@ public class ReportFragment extends Fragment {
         String dateToday = dateRange.Today();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String currentDateTime = sdf.format(new Date());
+
+
 
         transactionReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -173,6 +185,8 @@ public class ReportFragment extends Fragment {
 
                 int dailyOutcome = Total(outcomeDay);
                 dailyOutcomeTotal.setText(formatRupiah(Double.parseDouble(String.valueOf(dailyOutcome))));
+
+
             }
 
             @Override
@@ -436,6 +450,13 @@ public class ReportFragment extends Fragment {
             }
         });
 
+//        int dailyIncome = Integer.parseInt(dailyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+//        int dailyOutcome = Integer.parseInt(dailyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+//        int dailyDebt = Integer.parseInt(dailyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+//        loadPieChart(getPersentage(dailyIncome,dailyOutcome,dailyDebt,0),getPersentage(dailyIncome,dailyOutcome,dailyDebt,1),getPersentage(dailyIncome,dailyOutcome,dailyDebt,2),0);
+//        setUpPieChart();
+
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -444,28 +465,215 @@ public class ReportFragment extends Fragment {
                 monthlyContentLayout.setVisibility(View.GONE);
                 yearlyContentLayout.setVisibility(View.GONE);
 
+                int dailyIncome = Integer.parseInt(dailyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int dailyOutcome = Integer.parseInt(dailyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int dailyDebt = Integer.parseInt(dailyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+
+                int weeklyIncome = Integer.parseInt(weeklyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int weeklyOutcome = Integer.parseInt(weeklyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int weeklyDebt = Integer.parseInt(weeklyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+
+                int monthlyIncome = Integer.parseInt(monthlyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int monthlyOutcome = Integer.parseInt(monthlyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int monthlyDebt = Integer.parseInt(monthlyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+
+                int yearlyIncome = Integer.parseInt(yearlyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int yearlyOutcome = Integer.parseInt(yearlyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int yearlyDebt = Integer.parseInt(yearlyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+
+
+
                 if (checkedId == R.id.dailyRadioButton) {
+                    dailyIncomeRadio.setChecked(false);
+                    dailyOutcomeRadio.setChecked(false);
+                    dailyDebtRadio.setChecked(false);
+                    loadPieChart(getPersentage(dailyIncome,dailyOutcome,dailyDebt,0),getPersentage(dailyIncome,dailyOutcome,dailyDebt,1),getPersentage(dailyIncome,dailyOutcome,dailyDebt,2),0);
                     dailyContentLayout.setVisibility(View.VISIBLE);
                 } else if (checkedId == R.id.weeklyRadioButton) {
+                    weeklyIncomeRadio.setChecked(false);
+                    weeklyOutcomeRadio.setChecked(false);
+                    weeklyDebtRadio.setChecked(false);
+                    loadPieChart(getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,0),getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,1),getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,2),0);
                     weeklyContentLayout.setVisibility(View.VISIBLE);
                 } else if (checkedId == R.id.monthlyRadioButton) {
+                    monthlyIncomeRadio.setChecked(false);
+                    monthlyOutcomeRadio.setChecked(false);
+                    monthlyDebtRadio.setChecked(false);
+                    loadPieChart(getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,0),getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,1),getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,2),0);
                     monthlyContentLayout.setVisibility(View.VISIBLE);
                 } else if (checkedId == R.id.yearlyRadioButton) {
+                    yearlyIncomeRadio.setChecked(false);
+                    yearlyOutcomeRadio.setChecked(false);
+                    yearlyDebtRadio.setChecked(false);
+                    loadPieChart(getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,0),getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,1),getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,2),0);
                     yearlyContentLayout.setVisibility(View.VISIBLE);
                 }
+
             }
         });
 
         dailyContentLayout.setVisibility(View.VISIBLE);
 
         dailyRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                int dailyIncome = Integer.parseInt(dailyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int dailyOutcome = Integer.parseInt(dailyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int dailyDebt = Integer.parseInt(dailyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+
+                if (checkedId == R.id.dailyIncomeRadio){
+                    loadPieChart(getPersentage(dailyIncome,dailyOutcome,dailyDebt,0),getPersentage(dailyIncome,dailyOutcome,dailyDebt,1),getPersentage(dailyIncome,dailyOutcome,dailyDebt,2),1);
+                    setUpPieChart();
+                } else if (checkedId == R.id.dailyOutcomeRadio) {
+                    loadPieChart(getPersentage(dailyIncome,dailyOutcome,dailyDebt,0),getPersentage(dailyIncome,dailyOutcome,dailyDebt,1),getPersentage(dailyIncome,dailyOutcome,dailyDebt,2),2);
+                } else if (checkedId == R.id.dailyDebtRadio) {
+                    loadPieChart(getPersentage(dailyIncome,dailyOutcome,dailyDebt,0),getPersentage(dailyIncome,dailyOutcome,dailyDebt,1),getPersentage(dailyIncome,dailyOutcome,dailyDebt,2),3);
+                }
+
 
             }
         });
 
+        weeklyRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int weeklyIncome = Integer.parseInt(weeklyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int weeklyOutcome = Integer.parseInt(weeklyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int weeklyDebt = Integer.parseInt(weeklyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+
+                if (checkedId == R.id.weeklyIncomeRadio) {
+                    loadPieChart(getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,0),getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,1),getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,2),1);
+                } else if (checkedId == R.id.weeklyOutcomeRadio) {
+                    loadPieChart(getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,0),getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,1),getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,2),2);
+                } else if (checkedId == R.id.weeklyDebtRadio ) {
+                    loadPieChart(getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,0),getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,1),getPersentage(weeklyIncome,weeklyOutcome,weeklyDebt,2),3);
+                }
+            }
+        });
+
+        monthlyRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                int monthlyIncome = Integer.parseInt(monthlyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int monthlyOutcome = Integer.parseInt(monthlyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int monthlyDebt = Integer.parseInt(monthlyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+
+                if (checkedId == R.id.monthlyIncomeRadio ) {
+                    loadPieChart(getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,0),getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,1),getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,2),1);
+                } else if (checkedId == R.id.monthlyOutcomeRadio ) {
+                    loadPieChart(getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,0),getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,1),getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,2),2);
+                } else if (checkedId == R.id.monthlyRadioDebt ) {
+                    loadPieChart(getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,0),getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,1),getPersentage(monthlyIncome,monthlyOutcome,monthlyDebt,2),3);
+                }
+            }
+        });
+
+        yearlyRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                int yearlyIncome = Integer.parseInt(yearlyIncomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int yearlyOutcome = Integer.parseInt(yearlyOutcomeTotal.getText().toString().replaceAll("[Rp,.]", ""));
+                int yearlyDebt = Integer.parseInt(yearlyDebtTotal.getText().toString().replaceAll("[Rp,.]", ""));
+
+                if (checkedId == R.id.yearlyIncomeRadio ) {
+                    loadPieChart(getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,0),getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,1),getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,2),1);
+                } else if (checkedId == R.id.yearlyOutcomeRadio ) {
+                    loadPieChart(getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,0),getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,1),getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,2),2);
+                } else if (checkedId == R.id.yearlyDebtRadio ) {
+                    loadPieChart(getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,0),getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,1),getPersentage(yearlyIncome,yearlyOutcome,yearlyDebt,2),3);
+                }
+            }
+        });
+
         return view;
+    }
+
+
+    public float getPersentage(int a, int b, int c, int n){
+        float x = (float) (a);
+        float y = (float) (b);
+        float z = (float) (c);
+        float result = 0.0f;
+
+        float total = x+y+z;
+        float persentageX = x/total;
+        float persentageY = y/total;
+        float persentageZ = z/total;
+
+        if (n == 0){
+            result += persentageX;
+        } else if (n == 1) {
+            result += persentageY;
+        } else if (n == 2) {
+            result += persentageZ;
+        }
+
+        return result;
+    }
+
+    public void loadPieChart(float income, float outcome, float debt, int i){
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry(income, "Income"));
+        entries.add(new PieEntry(outcome, "Outcome"));
+        entries.add(new PieEntry(debt, "Debt"));
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (int color : ColorTemplate.MATERIAL_COLORS) {
+            colors.add(color);
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "Expense Category");
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setDrawValues(true);
+        data.setValueTextSize(12f);
+        data.setValueTextColor(Color.WHITE);
+
+        data.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format("%1.00f%%", value);
+            }
+        });
+
+        pieChart.setData(data);
+        int template = i;
+
+        if (template == 1) {
+            pieChart.highlightValue(0, 0);
+        } else if (template == 2) {
+            pieChart.highlightValue(1,0);
+        } else if (template == 3) {
+            pieChart.highlightValue(2,0);
+        }
+        else {
+            pieChart.highlightValue(null);
+        }
+        pieChart.invalidate();
+
+
+    }
+
+    public void setUpPieChart(){
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleColor(Color.WHITE);
+        pieChart.setHoleRadius(58f);
+        pieChart.setTransparentCircleRadius(61f);
+        pieChart.setRotationEnabled(true);
+        pieChart.setHighlightPerTapEnabled(true);
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setEntryLabelColor(Color.WHITE);
+        pieChart.setEntryLabelTextSize(12f);
+        pieChart.getLegend().setEnabled(false);
+
     }
 
     public static Integer Total(List<Integer> income) {
