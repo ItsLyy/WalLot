@@ -1,12 +1,14 @@
 package com.irlyreza.wallot.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -326,14 +328,26 @@ public class EditWalletMenu extends AppCompatActivity {
             }
         });
 
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
+        Dialog dialog = new Dialog(EditWalletMenu.this);
+        dialog.setContentView(R.layout.dialog_box);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_corner_gradient_blue));
+        dialog.setCancelable(false);
+
+        Button acceptBtn, rejectBtn;
+        TextView taskText;
+
+        acceptBtn = dialog.findViewById(R.id.accept_btn);
+        rejectBtn = dialog.findViewById(R.id.reject_btn);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userWalletReference = database.getReference("user_wallets");
+        DatabaseReference walletReference = database.getReference("wallets");
+        DatabaseReference transactionReference = database.getReference("transactions");
+
+        acceptBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference userWalletReference = database.getReference("user_wallets");
-                DatabaseReference walletReference = database.getReference("wallets");
-                DatabaseReference transactionReference = database.getReference("transactions");
-
                 userWalletReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshotUserWallet) {
@@ -345,7 +359,7 @@ public class EditWalletMenu extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshotTransaction) {
                                         for (DataSnapshot itemTransaction : snapshotTransaction.getChildren()) {
-                                            if(itemTransaction.child("id_wallets").getValue().equals(idWallets)) {
+                                            if(itemTransaction.child("id_wallets").getValue(String.class).equals(idWallets)) {
                                                 transactionReference.child(itemTransaction.getKey()).removeValue();
                                             }
                                         }
@@ -371,8 +385,26 @@ public class EditWalletMenu extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
+                        dialog.dismiss();
                     }
                 });
+            }
+        });
+
+        taskText = dialog.findViewById(R.id.task_text);
+        taskText.setText("Are you sure want to add wallet's balance to total balance?");
+
+        rejectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show();
             }
         });
     }

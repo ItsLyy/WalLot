@@ -29,12 +29,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.irlyreza.wallot.fragment.main_activity.ReportFragment;
 import com.irlyreza.wallot.fragment.main_activity.HomeMenu;
 import com.irlyreza.wallot.R;
+import com.irlyreza.wallot.fragment.main_activity.ProfileFragment;
 import com.irlyreza.wallot.fragment.main_activity.WalletMenu;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 if (selectedTab != 2) {
                     getSupportFragmentManager().beginTransaction().
                             setReorderingAllowed(true).
-                            replace(R.id.fragment_container, WalletMenu.class, null).
+                            replace(R.id.fragment_container, ReportFragment.class, null).
                             commit();
 
                     homeLabel.setVisibility(View.GONE);
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 if (selectedTab != 4) {
                     getSupportFragmentManager().beginTransaction().
                             setReorderingAllowed(true).
-                            replace(R.id.fragment_container, WalletMenu.class, null).
+                            replace(R.id.fragment_container, ProfileFragment.class, null).
                             commit();
 
                     homeLabel.setVisibility(View.GONE);

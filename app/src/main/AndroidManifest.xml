@@ -49,6 +49,10 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".fragment.main_activity.ProfileFragment"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".activity.Login"
             android:exported="true">
             <intent-filter>

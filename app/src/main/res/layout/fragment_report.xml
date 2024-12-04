@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Report"
+        android:textSize="50dp"
+        android:background="@drawable/bg_gradient_blue"
+        android:textColor="@color/white"
+        android:padding="10dp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="16dp">
+
+        <RadioButton
+            android:layout_margin="5dp"
+            android:id="@+id/dailyRadioButton"
+            android:background="@drawable/bg_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daily"
+            android:padding="5dp"/>
+
+        <RadioButton
+            android:layout_margin="5dp"
+            android:background="@drawable/bg_radio_button"
+            android:padding="5dp"
+            android:id="@+id/weeklyRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weekly" />
+
+        <RadioButton
+            android:layout_margin="5dp"
+            android:background="@drawable/bg_radio_button"
+            android:padding="5dp"
+            android:id="@+id/monthlyRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monthly" />
+
+        <RadioButton
+            android:layout_margin="5dp"
+            android:background="@drawable/bg_radio_button"
+            android:padding="5dp"
+            android:id="@+id/yearlyRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yearly" />
+
+    </RadioGroup>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/dailyContentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="invisible"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:textAllCaps="false"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Income : "
+                            android:textColor="@color/white"
+                            android:background="@drawable/bg_gradient_green"/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/daily_income_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="100.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:background="@drawable/bg_gradient_blue"
+                            android:layout_marginEnd="5dp"
+                            android:textColor="@color/white"
+                            android:textAllCaps="false"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Outcome: "/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/daily_outcome_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="100.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_weight="4"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:background="@drawable/bg_gradient_red"
+                            android:textColor="@color/white"
+                            android:layout_marginEnd="5dp"
+                            android:padding="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Debt : "/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/daily_debt_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="100.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:layout_marginTop="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RadioGroup
+                            android:id="@+id/dailyGroupButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/dailyIncomeRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Income "/>
+
+                            <RadioButton
+                                android:id="@+id/dailyOutcomeRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Outcome"/>
+
+                            <RadioButton
+                                android:id="@+id/dailyDebtRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Debt"/>
+                        </RadioGroup>
+
+
+                    </ScrollView>
+
+
+
+
+
+
+                </LinearLayout>
+
+                <!-- weekly -->
+                <LinearLayout
+                    android:id="@+id/weeklyContentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="invisible"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:textAllCaps="false"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Income : "
+                            android:textColor="@color/white"
+                            android:background="@drawable/bg_gradient_green"/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/weekly_income_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="1.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:background="@drawable/bg_gradient_blue"
+                            android:layout_marginEnd="5dp"
+                            android:textColor="@color/white"
+                            android:textAllCaps="false"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Outcome: "/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/weekly_outcome_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="1.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_weight="4"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:background="@drawable/bg_gradient_red"
+                            android:textColor="@color/white"
+                            android:layout_marginEnd="5dp"
+                            android:padding="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Debt : "/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/weekly_debt_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="1.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <ScrollView
+
+                        android:layout_marginTop="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RadioGroup
+                            android:id="@+id/weeklyGroupButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/weeklyIncomeRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Income "/>
+
+                            <RadioButton
+                                android:id="@+id/weeklyOutcomeRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Outcome"/>
+
+                            <RadioButton
+                                android:id="@+id/weeklyDebtRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Debt"/>
+                        </RadioGroup>
+
+
+                    </ScrollView>
+
+
+
+
+                </LinearLayout>
+
+                <!-- monthly -->
+                <LinearLayout
+                    android:id="@+id/monthlyContentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="invisible"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:textAllCaps="false"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Income : "
+                            android:textColor="@color/white"
+                            android:background="@drawable/bg_gradient_green"/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/monthly_income_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="10.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:background="@drawable/bg_gradient_blue"
+                            android:layout_marginEnd="5dp"
+                            android:textColor="@color/white"
+                            android:textAllCaps="false"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Outcome: "/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/monthly_outcome_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="10.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_weight="4"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:background="@drawable/bg_gradient_red"
+                            android:textColor="@color/white"
+                            android:layout_marginEnd="5dp"
+                            android:padding="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Debt : "/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/monthly_debt_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="10.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:layout_marginTop="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RadioGroup
+                            android:id="@+id/monthlyGroupButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/monthlyIncomeRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Income "/>
+
+                            <RadioButton
+                                android:id="@+id/monthlyOutcomeRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Outcome"/>
+
+                            <RadioButton
+                                android:id="@+id/monthlyRadioDebt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Debt"/>
+                        </RadioGroup>
+
+
+                    </ScrollView>
+
+
+
+
+                </LinearLayout>
+
+                <!-- Yearly -->
+                <LinearLayout
+                    android:id="@+id/yearlyContentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="invisible"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:textAllCaps="false"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Income : "
+                            android:textColor="@color/white"
+                            android:background="@drawable/bg_gradient_green"/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/yearly_income_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="100.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="3dp"
+                            android:background="@drawable/bg_gradient_blue"
+                            android:layout_marginEnd="5dp"
+                            android:textColor="@color/white"
+                            android:textAllCaps="false"
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Outcome: "/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/yearly_outcome_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="100.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_weight="4"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:background="@drawable/bg_gradient_red"
+                            android:textColor="@color/white"
+                            android:layout_marginEnd="5dp"
+                            android:padding="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Debt : "/>
+
+                        <TextView
+                            android:layout_weight="1"
+                            android:id="@+id/yearly_debt_nominal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:textSize="50sp"
+                            android:inputType="number"
+                            android:hint="100.000.000"
+                            android:maxLength="11"/>
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:layout_marginTop="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RadioGroup
+                            android:id="@+id/yearlyGroupButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/yearlyIncomeRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Income "/>
+
+                            <RadioButton
+                                android:id="@+id/yearlyOutcomeRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Outcome"/>
+
+                            <RadioButton
+                                android:id="@+id/yearlyDebtRadio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Debt"/>
+                        </RadioGroup>
+
+
+                    </ScrollView>
+
+
+                </LinearLayout>
+
+
+
+
+
+            </RelativeLayout>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
+
+</LinearLayout>
